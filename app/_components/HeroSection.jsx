@@ -4,6 +4,8 @@ import React from 'react';
 import { motion } from "framer-motion"; // For animations
 import { Button } from "@/components/ui/button"; // Assuming shadcn/ui Button
 import { ArrowRight } from 'lucide-react'; // Example icon
+import { useRouter } from 'next/navigation'; // Import the hook
+
 
 // Placeholder Images - Replace with your actual image paths
 // Using placehold.co for better visual placeholders
@@ -19,6 +21,7 @@ const placeholderImages = [
 const doubledImages = [...placeholderImages, ...placeholderImages];
 
 export default function HeroSection() {
+  const router = useRouter(); // <<<--- Initialize the router hook
   return (
     // Increased horizontal padding (px-6 sm:px-12 lg:px-20) for centering effect
     // Reduced vertical padding (py-12 md:py-16 lg:py-20) for compactness
@@ -33,7 +36,7 @@ export default function HeroSection() {
           Get a personalized college preference list based on your entrance scores, preferences & career goals.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-          <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3">
+          <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3" onClick={() => router.push('/pref-list-generator')}>
             Predict Now
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
