@@ -32,9 +32,7 @@ export default function Navbar() {
       // If it's a "coming soon" link, prevent default navigation for now
       if (href === '/about' || href === '/blogs') {
           e.preventDefault();
-          // Optionally, show a toast or alert message
-          alert(`${href === '/about' ? 'About Us' : 'Blogs'} page is coming soon!`);
-          // Or redirect to a dedicated coming soon page: router.push('/coming-soon');
+          router.push('/coming-soon');
       }
       setMenuOpen(false); // Close menu on any link click
   }
