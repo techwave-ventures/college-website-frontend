@@ -20,7 +20,7 @@ const Logo = () => (
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" }, // Link to /about page (create this page)
-  { href: "/explore", label: "Explore" }, // Link to /explore page (create this page)
+  { href: "/ExploreColleges", label: "Explore Colleges" }, // Link to /explore page (create this page)
   { href: "/blogs", label: "Blogs" }, // Link to /blogs page (create this page)
 ];
 
