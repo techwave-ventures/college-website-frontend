@@ -1,61 +1,124 @@
 "use client";
+
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { IoMdMenu, IoMdClose } from "react-icons/io";
-import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/button";
+import Link from "next/link"; // Use Next.js Link for client-side navigation
+import { useRouter } from "next/navigation"; // Keep for button push if needed
+import { IoMdMenu, IoMdClose } from "react-icons/io"; // Icons for mobile menu
+import { motion, AnimatePresence } from "framer-motion"; // For mobile menu animation
+import { Button } from "@/components/ui/button"; // Assuming shadcn/ui Button
+
+// Placeholder Logo SVG - Replace with your actual Logo component or image
+const Logo = () => (
+  <svg height="32" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    {/* Changed fill to black */}
+    <circle cx="50" cy="50" r="45" fill="#000000" />
+    <text x="50" y="60" fontSize="40" fill="white" textAnchor="middle" fontWeight="bold">C</text> {/* Example initial */}
+  </svg>
+);
+
+// Define Navigation Links
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/about", label: "About" }, // Link to /about page (create this page)
+  { href: "/explore", label: "Explore" }, // Link to /explore page (create this page)
+  { href: "/blogs", label: "Blogs" }, // Link to /blogs page (create this page)
+];
 
 export default function Navbar() {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const handleLinkClick = (e, href) => {
+      // If it's a "coming soon" link, prevent default navigation for now
+      if (href === '/about' || href === '/blogs') {
+          e.preventDefault();
+          // Optionally, show a toast or alert message
+          alert(`${href === '/about' ? 'About Us' : 'Blogs'} page is coming soon!`);
+          // Or redirect to a dedicated coming soon page: router.push('/coming-soon');
+      }
+      setMenuOpen(false); // Close menu on any link click
+  }
+
+  const handleSignUp = () => {
+      setMenuOpen(false);
+      router.push("/auth/signup");
+  }
+
+
   return (
     <nav className="bg-white shadow-md fixed top-0 left-0 w-full z-50">
-      <div className="container mx-auto flex justify-between items-center p-4">
+      {/* Increased padding slightly */}
+      <div className="container mx-auto flex justify-between items-center p-4 md:px-6">
+
         {/* Logo */}
-        <h1 className="text-2xl font-bold">Logo</h1>
+        <Link href="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+           <Logo />
+           <span className="text-xl font-bold text-gray-800 hidden sm:inline">Campus Sathi</span> {/* Optional: Add Name */}
+        </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex space-x-6 text-gray-700">
-          <a href="/" className="hover:text-black">Home Page</a>
-          <a href="#" className="hover:text-black">About Us</a>
-          <a href="#" className="hover:text-black">Consultancy Services</a>
-          <a href="/ExploreColleges" className="hover:text-black">Explore Colleges</a>
+        {/* Increased spacing (space-x-8) */}
+        <div className="hidden md:flex items-center space-x-8 text-gray-600">
+          {navLinks.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              onClick={(e) => handleLinkClick(e, link.href)} // Handle coming soon
+              // Changed hover text color to black
+              className="hover:text-black hover:underline underline-offset-4 transition-colors duration-200"
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
 
-        {/* Sign Up Button */}
-        <Button onClick={() => router.push("/auth/signup")} className="hidden md:block bg-black text-white px-4 py-2">
+        {/* Sign Up Button (Desktop) */}
+        <Button
+            onClick={handleSignUp}
+            className="hidden md:inline-flex bg-black hover:bg-gray-800 text-white px-5 py-2 rounded-md" // Added rounded-md
+        >
           Sign Up
         </Button>
 
         {/* Mobile Menu Button */}
-        <button onClick={() => setMenuOpen(true)} className="md:hidden text-2xl">
-          <IoMdMenu />
+        <button
+          onClick={() => setMenuOpen(!menuOpen)} // Toggle menu
+          // Changed hover text color to black
+          className="md:hidden text-2xl text-gray-700 hover:text-black transition-colors"
+          aria-label="Toggle menu" // Accessibility
+        >
+          {menuOpen ? <IoMdClose /> : <IoMdMenu />}
         </button>
       </div>
 
-      {/* Mobile Navigation */}
+      {/* Mobile Navigation Menu */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div 
-            initial={{ x: "100%" }} 
-            animate={{ x: 0 }} 
-            exit={{ x: "100%" }} 
-            transition={{ duration: 0.3 }} 
-            className="fixed top-0 right-0 w-3/4 h-full bg-white shadow-lg flex flex-col p-6 md:hidden"
+          <motion.div
+            initial={{ opacity: 0, y: -20 }} // Start slightly above and faded out
+            animate={{ opacity: 1, y: 0 }} // Animate to full opacity and original position
+            exit={{ opacity: 0, y: -20 }} // Animate out
+            transition={{ duration: 0.2 }}
+            // Changed position to absolute below navbar, full width
+            className="absolute top-full left-0 w-full bg-white shadow-lg flex flex-col p-6 md:hidden"
           >
-            {/* Close Button */}
-            <button onClick={() => setMenuOpen(false)} className="self-end text-3xl">
-              <IoMdClose />
-            </button>
-
             {/* Navigation Links */}
-            <nav className="flex flex-col space-y-4 mt-4 text-gray-700">
-              <a href="/" className="hover:text-black" onClick={() => setMenuOpen(false)}>Home Page</a>
-              <a href="#" className="hover:text-black" onClick={() => setMenuOpen(false)}>About Us</a>
-              <a href="#" className="hover:text-black" onClick={() => setMenuOpen(false)}>Consultancy Services</a>
-              <a href="/ExploreColleges" className="hover:text-black" onClick={() => setMenuOpen(false)}>Explore Colleges</a>
-              <Button onClick={() => { setMenuOpen(false); router.push("/auth/signup"); }} className="bg-black text-white px-4 py-2">
+            <nav className="flex flex-col space-y-4 text-gray-700">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  onClick={(e) => handleLinkClick(e, link.href)} // Close menu and handle coming soon
+                  // Changed hover text color to black
+                  className="py-2 text-center hover:text-black hover:bg-gray-100 rounded transition-colors duration-200"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <Button
+                onClick={handleSignUp}
+                className="w-full mt-4 bg-black text-white px-4 py-2 rounded-md"
+              >
                 Sign Up
               </Button>
             </nav>
