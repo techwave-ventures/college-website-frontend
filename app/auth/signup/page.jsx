@@ -34,7 +34,7 @@ const SignupPage = () => {
 
     try {
       const res = await axios.post(
-        "https://collage-website-backend.onrender.com/apiv1/auth/signup",
+        "https://college-website-backend-main.onrender.com/apiv1/auth/signup",
         form
       );
 
