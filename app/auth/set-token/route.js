@@ -32,10 +32,10 @@ export async function POST(request) {
     // 3. Serialize the cookie with security flags
     const serializedCookie = serialize(TOKEN_NAME, token, {
       httpOnly: true,       // Prevents client-side JavaScript access (XSS protection)
-      secure: IS_PRODUCTION, // Send only over HTTPS in production
       maxAge: MAX_AGE,      // Cookie expiry time in seconds from now
       path: '/',            // Cookie available across the entire site
-      sameSite: 'lax',      // Protects against CSRF attacks ('strict' or 'lax')
+      secure: true,       // Set to true (required for SameSite=None)
+      sameSite: 'None',   // Set to 'None' for cross-site cookies
     });
 
     // 4. Create the success response

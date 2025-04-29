@@ -47,7 +47,7 @@ export default function Navbar() {
     const fetchUserStatus = async () => {
       // Construct the backend user profile URL
       // IMPORTANT: Replace with your actual backend endpoint for fetching logged-in user data
-      const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"; // Use env var or fallback
+      const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main.onrender.com"; // Use env var or fallback
       const profileUrl = `${baseApiUrl}/apiv1/users/me`; // Assumes '/apiv1/users/me' is your protected route
 
       try {
