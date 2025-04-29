@@ -33,7 +33,7 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" },
   { href: "/ExploreColleges", label: "Explore Colleges" },
-  { href: "/blogs", label: "Blogs" },
+  { href: "/blogs/MHTCET", label: "Blogs" },
 ];
 
 export default function Navbar() {
