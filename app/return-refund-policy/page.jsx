@@ -1,15 +1,17 @@
 // Suggested file path: app/return-refund-policy/page.jsx (for App Router)
 // Or: pages/return-refund-policy.jsx (for Pages Router)
 
+"use client"; // Add this if using App Router
+
 import React from 'react';
-import Navbar from "../_components/Navbar"; // Adjust path if needed relative to this file
-import Footer from "../_components/Footer"; // Adjust path if needed relative to this file
+import Navbar from "../_components/Navbar"; // Adjust path as needed relative to this file
+import Footer from "../_components/Footer"; // Adjust path as needed relative to this file
 
 export default function ReturnRefundPolicyPage() {
-  // **IMPORTANT**: Replace all placeholder text below with your actual return/refund policy.
+  // **IMPORTANT**: Review all sections to ensure accuracy for your specific practices.
   // Consult with a legal/business expert to ensure accuracy and compliance.
 
-  const lastUpdatedDate = "April 28, 2025"; // *** UPDATE THIS DATE WHEN POLICY CHANGES ***
+  const lastUpdatedDate = "April 29, 2025"; // *** UPDATE THIS DATE WHEN POLICY CHANGES ***
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50"> {/* Added background */}
@@ -34,7 +36,7 @@ export default function ReturnRefundPolicyPage() {
               Thank you for choosing Campus Sathi. We strive to provide valuable guidance and services to help you with your college admission journey. This policy outlines the terms under which returns or refunds may be considered for our paid services.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              <strong>***[Briefly state the general stance - e.g., "Due to the nature of digital services and personalized counseling...", "We offer refunds under specific circumstances...", etc.]***</strong>
+              Due to the nature of digital services and personalized guidance provided, refunds are generally limited but handled on a case-by-case basis under specific circumstances outlined below.
             </p>
           </section>
 
@@ -49,13 +51,13 @@ export default function ReturnRefundPolicyPage() {
                 <strong>Service Not Rendered:</strong> If you paid for a specific service (e.g., a counseling session, a personalized report) and we failed to deliver that service within the agreed-upon timeframe due to reasons solely attributable to us.
               </li>
               <li>
-                <strong>Technical Issues:</strong> In case of significant technical failure on our platform that prevents you from accessing or utilizing the core features of a paid service you purchased, and we are unable to resolve the issue within a reasonable time.
+                <strong>Technical Issues:</strong> In case of significant technical failure on our platform that prevents you from accessing or utilizing the core features of a paid service you purchased, and we are unable to resolve the issue within a reasonable time [Specify timeframe, e.g., 48 hours].
               </li>
               <li>
                 <strong>Duplicate Charges:</strong> If you were accidentally charged multiple times for the same service.
               </li>
-              {/* ***[Add/Remove/Modify conditions. Be very specific. Consider time limits, e.g., within X days of purchase]*** */}
-              {/* ***[Example: Cancellation of a scheduled session with X hours notice]*** */}
+               {/* Add/Remove/Modify conditions. Be very specific. */}
+               {/* Example: Cancellation of a scheduled session with 24 hours notice */}
             </ul>
           </section>
 
@@ -67,18 +69,18 @@ export default function ReturnRefundPolicyPage() {
             </p>
             <ul className="list-disc list-inside text-gray-700 leading-relaxed space-y-2 pl-4">
               <li>
-                <strong>Services Already Rendered:</strong> Fees for counseling sessions that have already taken place, or reports/lists that have already been generated and delivered.
+                <strong>Services Already Rendered:</strong> Fees for counseling sessions that have already taken place, or reports/lists that have already been generated and delivered electronically.
               </li>
               <li>
-                <strong>Digital Products:</strong> Access fees for digital guides, checklists, or generator tools once accessed or used.
+                <strong>Digital Products/Tools Access:</strong> Fees for accessing digital guides, checklists, or generator tools once they have been accessed or used.
               </li>
               <li>
                 <strong>Subscription Periods:</strong> Fees for any subscription period that has already commenced or passed.
               </li>
               <li>
-                <strong>Change of Mind:</strong> Refunds are generally not provided if you simply change your mind after purchasing a service.
+                <strong>Change of Mind:</strong> Refunds are generally not provided if you simply change your mind after purchasing or accessing a service.
               </li>
-              {/* ***[Be specific about what is NOT refundable. Align this with your terms of service.]*** */}
+               {/* Be specific about what is NOT refundable. Align this with your terms of service. */}
             </ul>
           </section>
 
@@ -86,20 +88,20 @@ export default function ReturnRefundPolicyPage() {
           <section className="mb-8 space-y-4">
             <h2 className="text-2xl font-semibold text-gray-800 mb-3">4. How to Request a Refund</h2>
             <p className="text-gray-700 leading-relaxed">
-              To request a refund based on the eligibility criteria mentioned above, please contact us within [**Specify Timeframe, e.g., 7 days**] of your purchase or the incident date.
+              To request a refund based on the eligibility criteria mentioned above, please contact us within [Specify Timeframe, e.g., 7 days] of your purchase or the incident date.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              Please email us at [**Your Support Email Address**] with the following information:
+              Please email us at techwaveventures@gmail.com with the following information:
             </p>
              <ul className="list-disc list-inside text-gray-700 leading-relaxed space-y-2 pl-4">
                 <li>Your full name and registered email address.</li>
-                <li>Order number or transaction details.</li>
+                <li>Order number or transaction details (if applicable).</li>
                 <li>The name of the service you are requesting a refund for.</li>
                 <li>A clear explanation of the reason for your refund request, referencing the eligibility criteria.</li>
                 <li>Any relevant supporting documentation (e.g., screenshots of technical issues).</li>
              </ul>
               <p className="text-gray-700 leading-relaxed mt-2">
-                We will review your request and notify you of the outcome via email within [**Specify Timeframe, e.g., 5-7 business days**].
+                We will review your request and notify you of the outcome via email within [Specify Timeframe, e.g., 5-7 business days].
              </p>
           </section>
 
@@ -107,14 +109,14 @@ export default function ReturnRefundPolicyPage() {
           <section className="mb-8 space-y-4">
             <h2 className="text-2xl font-semibold text-gray-800 mb-3">5. Refund Processing</h2>
             <p className="text-gray-700 leading-relaxed">
-              If your refund request is approved, it will be processed, and a credit will automatically be applied to your original method of payment within [**Specify Timeframe, e.g., 7-10 business days**]. Please note that processing times may vary depending on your bank or payment provider.
+              If your refund request is approved, it will be processed, and a credit will automatically be applied to your original method of payment within [Specify Timeframe, e.g., 7-10 business days]. Please note that processing times may vary depending on your bank or payment provider.
             </p>
             <p className="text-gray-700 leading-relaxed">
               If you haven't received an approved refund after the specified timeframe, please first check with your bank or credit card company. If you've done this and still have not received your refund, please contact us.
             </p>
           </section>
 
-          {/* Policy Changes */}
+           {/* Policy Changes */}
            <section className="mb-8 space-y-4">
             <h2 className="text-2xl font-semibold text-gray-800 mb-3">6. Policy Changes</h2>
             <p className="text-gray-700 leading-relaxed">
@@ -129,12 +131,8 @@ export default function ReturnRefundPolicyPage() {
               If you have any questions concerning our return and refund policy, please contact us at:
             </p>
             <p className="text-gray-700 leading-relaxed mt-4">
-              [**Your Support Email Address**] <br />
-              [**Your Contact Phone Number (Optional)**] <br />
-              [**Link to your Contact Us page (Optional)**]
-            </p>
-             <p className="text-gray-700 leading-relaxed mt-4">
-              <strong>***[Fill in your actual contact details]***</strong>
+              Email: techwaveventures@gmail.com <br />
+              Phone: 9209143384
             </p>
           </section>
 
