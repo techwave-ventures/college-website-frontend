@@ -1,9 +1,13 @@
-"use client";
+// pages/auth/signup.js (or your chosen path)
+"use client"; // Required for client-side interactivity (hooks, event handlers)
 
-import { useState, useEffect } from "react";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import toast, { Toaster } from 'react-hot-toast';
+import { useState, useEffect } from "react"; // Removed unused useEffect
+import axios from "axios"; // For making API calls
+import { useRouter } from "next/navigation"; // Use 'next/navigation' for App Router
+import Link from "next/link"; // For client-side navigation (Login link)
+import toast, { Toaster } from 'react-hot-toast'; // For user feedback
+
+// Import UI components from shadcn/ui (ensure paths are correct)
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -15,7 +19,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react"; // Loading spinner icon
 
 const SignupPage = () => {
   const router = useRouter();
@@ -25,23 +29,24 @@ const SignupPage = () => {
     phoneNumber: "",
     password: "",
     confirmPassword: "",
-    accountType: "Student",
+    accountType: "Student", // Default account type
   });
   const [loading, setLoading] = useState(false);
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // Define Backend API URL using environment variable
+  // Ensure NEXT_PUBLIC_API_URL is set in your .env.local file
+  const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main.onrender.com"; // Fallback for local dev
 
+  // Handle input changes
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!mounted) return;
+    e.preventDefault(); // Prevent default form submission
 
+    // Basic client-side password match validation
     if (form.password !== form.confirmPassword) {
       toast.error("Passwords do not match!");
       return;
@@ -50,54 +55,77 @@ const SignupPage = () => {
     setLoading(true);
     const loadingToastId = toast.loading("Creating account...");
 
-    const signupData = form; // Send the complete form data
+    // Prepare data for the backend
+    const signupData = {
+        name: form.name,
+        email: form.email,
+        phoneNumber: form.phoneNumber,
+        password: form.password,
+        confirmPassword: form.confirmPassword, // Send confirmPassword for backend check
+        accountType: form.accountType,
+    };
 
-    // --- FIX: Correctly construct the API URL ---
-    const baseApiUrl = "https://college-website-backend-main.onrender.com" || "http://localhost:5000"; // Get base URL or fallback
-    const signupUrl = `${baseApiUrl}/apiv1/auth/signup`; // Append the specific endpoint
-
-    console.log("Attempting signup at URL:", signupUrl); // Add log to verify URL
+    // Construct the full API endpoint URL
+    const signupUrl = `${baseApiUrl}/apiv1/auth/signup`;
+    console.log("Attempting signup at URL:", signupUrl);
+    console.log("Sending signup data:", signupData); // Log data being sent
 
     try {
-      const res = await axios.post(
-        signupUrl, // Use the correctly constructed URL
-        signupData
-      );
+      // Send POST request to the backend signup endpoint
+      const response = await axios.post(signupUrl, signupData);
 
       toast.dismiss(loadingToastId);
 
-      if (res.data.success) {
+      // Check if backend indicates success
+      if (response.data.success) {
         toast.success("Account created successfully! Redirecting to login...");
+        // Redirect to login page after a short delay
         setTimeout(() => {
-             router.push("/auth/login");
-        }, 1500);
+          router.push("/auth/login"); // Navigate to login page
+        }, 1500); // 1.5 second delay
       } else {
-        toast.error(res.data.message || "Signup failed. Please try again.");
+        // Show error message from backend if available
+        toast.error(response.data.message || "Signup failed. Please try again.");
       }
-    } catch (err) {
+    } catch (error) {
       toast.dismiss(loadingToastId);
-      // Log the error response if available
-      console.error("Signup error response:", err.response);
-      console.error("Signup error request:", err.request);
-      console.error("Signup error message:", err.message);
+      console.error("Signup Error:", error); // Log the full error object
 
-      toast.error(err.response?.data?.message || "Signup failed. Please check your details or network connection.");
-    } finally {
-      if (mounted) {
-         setLoading(false);
+      // Extract and display a user-friendly error message
+      let errorMessage = "Signup failed. Please check your details or network connection.";
+      if (error.response) {
+        console.error("Error Response Data:", error.response.data);
+        console.error("Error Response Status:", error.response.status);
+        errorMessage = error.response.data?.message || `Server error (${error.response.status}). Please try again.`;
+      } else if (error.request) {
+        console.error("Error Request:", error.request);
+        errorMessage = "No response from server. Check your network connection.";
+      } else {
+        console.error("Error Message:", error.message);
+        errorMessage = `An error occurred: ${error.message}`;
       }
+      toast.error(errorMessage);
+    } finally {
+      // Ensure loading state is reset regardless of success or failure
+      setLoading(false);
     }
   };
 
+  // --- UI Reverted to Previous Style ---
   return (
+    // Original gradient background
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50 p-4">
+      {/* Toaster for displaying notifications */}
       <Toaster position="top-right" reverseOrder={false} />
+
+      {/* Signup Card (Original Styling) */}
       <Card className="w-full max-w-md shadow-lg border border-gray-200 rounded-xl">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold tracking-tight">Sign Up</CardTitle>
           <CardDescription>Create your account to get started.</CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Form with original input/button styling */}
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Name Field */}
             <div className="space-y-2">
@@ -110,7 +138,7 @@ const SignupPage = () => {
                 onChange={handleChange}
                 required
                 disabled={loading}
-                className="rounded-md"
+                className="rounded-md" // Original class
               />
             </div>
 
@@ -126,7 +154,7 @@ const SignupPage = () => {
                 onChange={handleChange}
                 required
                 disabled={loading}
-                className="rounded-md"
+                className="rounded-md" // Original class
               />
             </div>
 
@@ -135,14 +163,14 @@ const SignupPage = () => {
               <Label htmlFor="phoneNumber">Phone Number</Label>
               <Input
                 id="phoneNumber"
-                type="tel"
+                type="tel" // Keep 'tel' type
                 name="phoneNumber"
                 placeholder="e.g., 9876543210"
                 value={form.phoneNumber}
                 onChange={handleChange}
                 required
                 disabled={loading}
-                className="rounded-md"
+                className="rounded-md" // Original class
               />
             </div>
 
@@ -157,9 +185,9 @@ const SignupPage = () => {
                 value={form.password}
                 onChange={handleChange}
                 required
-                minLength={6}
+                minLength={6} // Keep minLength
                 disabled={loading}
-                className="rounded-md"
+                className="rounded-md" // Original class
               />
             </div>
 
@@ -175,11 +203,11 @@ const SignupPage = () => {
                 onChange={handleChange}
                 required
                 disabled={loading}
-                className="rounded-md"
+                className="rounded-md" // Original class
               />
             </div>
 
-            {/* Submit Button */}
+            {/* Submit Button (Original Styling) */}
             <Button type="submit" className="w-full rounded-md" disabled={loading}>
               {loading ? (
                 <>
@@ -195,9 +223,10 @@ const SignupPage = () => {
         <CardFooter className="flex justify-center text-sm">
           <p className="text-gray-600">
             Already have an account?{" "}
-            <a href="/auth/login" className="font-medium text-blue-600 hover:underline">
+            {/* Use Next.js Link for internal navigation */}
+            <Link href="/auth/login" className="font-medium text-blue-600 hover:underline">
               Login
-            </a>
+            </Link>
           </p>
         </CardFooter>
       </Card>
