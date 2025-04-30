@@ -129,7 +129,7 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
     formData.branches.forEach((b) => queryParams.append('branches', b));
     formData.places.forEach((p) => queryParams.append('places', p));
 
-    const apiUrl = `https://pref-list.onrender.com/preference-list?${queryParams.toString()}`;
+    const apiUrl = `https://pref-list-new.onrender.com/preference-list?${queryParams.toString()}`;
     console.log("Fetching:", apiUrl);
 
     try {
