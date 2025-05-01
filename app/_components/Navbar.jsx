@@ -102,7 +102,7 @@ export default function Navbar() {
   // Handle navigation link clicks
   const handleLinkClick = (e, href) => {
     // Handle "coming soon" links
-    if (href === '/about' || href.startsWith('/blogs')) { // Adjusted check for blogs
+    if (href === '/about') { // Adjusted check for blogs
       e.preventDefault(); // Prevent default link behavior
       router.push('/coming-soon'); // Redirect to coming soon page
     }
