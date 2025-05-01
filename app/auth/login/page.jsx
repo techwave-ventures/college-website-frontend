@@ -1,13 +1,13 @@
 // pages/auth/login.js (or your chosen path)
 "use client"; // Required for client-side interactivity
 
-import { useState } from "react"; // Removed unused useEffect
-import axios from "axios"; // For making API calls
-import { useRouter } from "next/navigation"; // Use 'next/navigation' for App Router
-import Link from "next/link"; // For client-side navigation (Sign Up link)
-import toast, { Toaster } from 'react-hot-toast'; // For user feedback
+import { useState } from "react";
+import axios from "axios";
+import { useRouter, useSearchParams } from "next/navigation"; // Import useSearchParams
+import Link from "next/link";
+import toast, { Toaster } from 'react-hot-toast';
 
-// Import UI components from shadcn/ui (ensure paths are correct)
+// Import UI components
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -19,10 +19,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Loader2 } from "lucide-react"; // Loading spinner icon
+import { Loader2 } from "lucide-react";
 
 const LoginPage = () => {
   const router = useRouter();
+  const searchParams = useSearchParams(); // Hook to get query parameters
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
 
@@ -37,16 +38,15 @@ const LoginPage = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Prevent default form submission
+    e.preventDefault();
     setLoading(true);
     const loadingToastId = toast.loading("Attempting login...");
 
-    // Construct the backend login URL
     const loginUrl = `${baseApiUrl}/apiv1/auth/login`;
     console.log("Attempting login with backend at:", loginUrl);
 
     try {
-      // --- CRITICAL CHANGE: Call backend login directly and include credentials ---
+      // Call backend login directly and include credentials
       // The backend will set the httpOnly cookie via the Set-Cookie header
       const loginRes = await axios.post(
         loginUrl,
@@ -63,20 +63,38 @@ const LoginPage = () => {
         toast.success("Login successful!");
         const user = loginRes.data.user; // Get user info from response
 
-        // --- REMOVED: Logic to call internal /set-token route ---
-        // The cookie is now set directly by the backend response.
+        // --- DYNAMIC REDIRECT LOGIC ---
+        const redirectedFrom = searchParams.get('redirectedFrom');
+        const isValidRedirect = redirectedFrom && redirectedFrom.startsWith('/');
 
-        // Redirect based on user type
-        // Add a small delay for the toast message to be visible
+        console.log("Redirect path from query:", redirectedFrom);
+        console.log("Is valid redirect:", isValidRedirect);
+
+        // Add a small delay for the toast message
         setTimeout(() => {
+          let targetPath = ''; // Variable to hold the final redirect path
+
+          if (isValidRedirect) {
+            targetPath = redirectedFrom;
+            console.log("Attempting redirect to intended path:", targetPath);
+          } else {
+            // Fallback: Redirect based on user type if no valid redirect path
+            console.log("No valid redirect path, determining fallback based on role.");
             if (user?.accountType === "Admin") {
-                router.push("/admin-dashboard"); // Redirect admin
+              targetPath = "/admin-dashboard";
             } else {
-                router.push("/user-dashboard"); // Redirect regular user (e.g., Student)
+              targetPath = "/"; // ** CHANGED: Fallback to home page for non-admins **
             }
-            // Optionally use router.replace() to prevent going back to login page
-            // router.replace(user?.accountType === "Admin" ? "/admin-dashboard" : "/user-dashboard");
+            console.log("Attempting redirect to fallback path:", targetPath);
+          }
+
+          // Perform the navigation
+          router.push(targetPath);
+          // You could also use replace to avoid adding login to history:
+          // router.replace(targetPath);
+
         }, 500); // 0.5 second delay
+        // --- END DYNAMIC REDIRECT LOGIC ---
 
       } else {
         // Handle backend login failure reported by the API
