@@ -8,8 +8,8 @@ import { jwtVerify } from 'jose'; // Library for JWT verification
 const protectedPaths = [
     '/user-dashboard',
     '/admin-dashboard',
-    '/profile',
-    '/pref-list-generator'
+    '/profile'
+    
 ];
 const publicPaths = [
     '/auth/login',
@@ -18,6 +18,7 @@ const publicPaths = [
     '/ExploreColleges',
     '/blogs',
     '/coming-soon',
+    '/pref-list-generator',
     '/'
 ];
 const secret = process.env.JWT_SECRET;
@@ -81,6 +82,9 @@ export async function middleware(request) {
 
     // --- Step 2a: Check if the authentication cookie exists ---
     const token = request.cookies.get(cookieName)?.value;
+    const token1 = request.cookies.getAll();
+    console.log(`[Middleware] All Cookies: ${JSON.stringify(token1)}`);
+    
     const loginUrl = new URL('/auth/login', request.url);
     loginUrl.searchParams.set('redirectedFrom', pathname); // Prepare login URL early
 
@@ -134,6 +138,7 @@ export async function middleware(request) {
   if (pathname.startsWith('/auth/login') || pathname.startsWith('/auth/signup')) {
     console.log(`[Middleware] Checking access to auth page: ${pathname}`);
     const token = request.cookies.get(cookieName)?.value;
+  
 
     if (token) {
       console.log(`[Middleware] Token found while trying to access ${pathname}. Verifying token validity...`);
