@@ -26,7 +26,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react"; // Loading icon
 
 // Define the backend base URL and the specific endpoint path
-const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000'; // Use env variable or default
+const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://college-website-backend-main.onrender.com'; // Use env variable or default
 const PAYMENT_ENDPOINT_PATH = "/apiv1/register-and-pay"; // The specific path on your backend
 
 // Define Caste Categories (adjust as needed)
