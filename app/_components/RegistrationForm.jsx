@@ -216,7 +216,7 @@ export default function RegistrationForm({ plan, onSuccess }) {
                 <> <Loader2 className="animate-spin mr-2 h-4 w-4" /> Processing... </>
               ) : (
                 // Dynamically show amount if > 0
-                `Proceed to Pay ${plan?.amount > 0 ? `(₹${plan.amount / 100})` : ''}`
+                `Register & Proceed to Pay ${plan?.amount > 0 ? `(₹${plan.amount / 100})` : ''}`
               )}
             </Button>
         </div>
