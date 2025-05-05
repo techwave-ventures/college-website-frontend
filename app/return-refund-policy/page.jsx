@@ -101,7 +101,7 @@ export default function ReturnRefundPolicyPage() {
                 <li>Any relevant supporting documentation (e.g., screenshots of technical issues).</li>
              </ul>
               <p className="text-gray-700 leading-relaxed mt-2">
-                We will review your request and notify you of the outcome via email within [Specify Timeframe, e.g., 5-7 business days].
+                We will review your request and notify you of the outcome via email within 7-15 business days.
              </p>
           </section>
 
@@ -109,7 +109,7 @@ export default function ReturnRefundPolicyPage() {
           <section className="mb-8 space-y-4">
             <h2 className="text-2xl font-semibold text-gray-800 mb-3">5. Refund Processing</h2>
             <p className="text-gray-700 leading-relaxed">
-              If your refund request is approved, it will be processed, and a credit will automatically be applied to your original method of payment within [Specify Timeframe, e.g., 7-10 business days]. Please note that processing times may vary depending on your bank or payment provider.
+              If your refund request is approved, it will be processed, and a credit will automatically be applied to your original method of payment within 7-15 business days. Please note that processing times may vary depending on your bank or payment provider.
             </p>
             <p className="text-gray-700 leading-relaxed">
               If you haven't received an approved refund after the specified timeframe, please first check with your bank or credit card company. If you've done this and still have not received your refund, please contact us.

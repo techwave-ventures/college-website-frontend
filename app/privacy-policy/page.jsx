@@ -164,7 +164,7 @@ export default function PrivacyPolicyPage() {
               If you have questions or comments about this Privacy Policy, please contact us at:
             </p>
             <p className="text-gray-700 leading-relaxed mt-4">
-              Campus Sathi (TechWave Ventures) <br />
+              Campus Sathi (TechWave Ventures Private Limited) <br />
               Pune, Maharashtra <br />
               India <br />
               Email: techwaveventures@gmail.com <br />

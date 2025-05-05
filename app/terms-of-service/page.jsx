@@ -102,7 +102,7 @@ export default function TermsOfServicePage() {
           <section className="mb-8 space-y-4">
             <h2 className="text-2xl font-semibold text-gray-800 mb-3">5. Intellectual Property Rights</h2>
             <p className="text-gray-700 leading-relaxed">
-              The Services and their original content (excluding content provided by users), features, and functionality are and will remain the exclusive property of Campus Sathi (operated by TechWave Ventures) and its licensors. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of Campus Sathi.
+              The Services and their original content (excluding content provided by users), features, and functionality are and will remain the exclusive property of Campus Sathi (operated by TechWave Ventures Private Limited) and its licensors. Our trademarks and trade dress may not be used in connection with any product or service without the prior written consent of Campus Sathi.
             </p>
             <p className="text-gray-700 leading-relaxed">
               You are granted a limited, non-exclusive, non-transferable license to access and use the Services for your personal, non-commercial use related to your college admission process, subject to these Terms.
@@ -117,7 +117,7 @@ export default function TermsOfServicePage() {
               The Services are provided on an "AS IS" and "AS AVAILABLE" basis. Your use of the Services is at your sole risk.
             </p>
             <p className="text-gray-700 leading-relaxed">
-              Campus Sathi expressly disclaims all warranties of any kind, whether express or implied, including, but not limited to, implied warranties of merchantability, fitness for a particular purpose, title, and non-infringement.
+              Campus Sathi expressly disclaims all warranties of any kind, whether express or implied, includin`g, but not limited to, implied warranties of merchantability, fitness for a particular purpose, title, and non-infringement.
             </p>
             <p className="text-gray-700 leading-relaxed">
               We do not warrant that: (a) the Services will meet your specific requirements; (b) the Services will be uninterrupted, timely, secure, or error-free; (c) the results obtained from the use of the Services (including predictions or recommendations) will be accurate, reliable, or complete; or (d) any errors in the Services will be corrected.

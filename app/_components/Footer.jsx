@@ -76,7 +76,7 @@ export default function Footer() {
       {/* Bottom Bar - Updated with <br /> tag */}
       <div className="text-center mt-10 pt-6 border-t border-gray-700 text-sm text-gray-500">
         &copy; {new Date().getFullYear()} Campus Sathi <br /> {/* Line break added here */}
-        Designed & Developed by Techwave ventures. {/* Updated developer name */}
+        Designed & Developed by Techwave ventures Private Limited. {/* Updated developer name */}
       </div>
     </footer>
   );
