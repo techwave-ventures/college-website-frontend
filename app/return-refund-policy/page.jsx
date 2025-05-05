@@ -51,7 +51,7 @@ export default function ReturnRefundPolicyPage() {
                 <strong>Service Not Rendered:</strong> If you paid for a specific service (e.g., a counseling session, a personalized report) and we failed to deliver that service within the agreed-upon timeframe due to reasons solely attributable to us.
               </li>
               <li>
-                <strong>Technical Issues:</strong> In case of significant technical failure on our platform that prevents you from accessing or utilizing the core features of a paid service you purchased, and we are unable to resolve the issue within a reasonable time [Specify timeframe, e.g., 48 hours].
+                <strong>Technical Issues:</strong> In case of significant technical failure on our platform that prevents you from accessing or utilizing the core features of a paid service you purchased, and we are unable to resolve the issue within a reasonable time 72 hours.
               </li>
               <li>
                 <strong>Duplicate Charges:</strong> If you were accidentally charged multiple times for the same service.
@@ -88,7 +88,7 @@ export default function ReturnRefundPolicyPage() {
           <section className="mb-8 space-y-4">
             <h2 className="text-2xl font-semibold text-gray-800 mb-3">4. How to Request a Refund</h2>
             <p className="text-gray-700 leading-relaxed">
-              To request a refund based on the eligibility criteria mentioned above, please contact us within [Specify Timeframe, e.g., 7 days] of your purchase or the incident date.
+              To request a refund based on the eligibility criteria mentioned above, please contact us within 7 days of your purchase or the incident date.
             </p>
             <p className="text-gray-700 leading-relaxed">
               Please email us at techwaveventures@gmail.com with the following information:
