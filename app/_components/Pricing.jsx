@@ -1,26 +1,19 @@
 // components/Pricing.jsx (or your path)
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react'; // Added useEffect
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
+import axios from 'axios'; // Import axios for API calls
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Check } from "lucide-react";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  // DialogTrigger, // We'll trigger manually via state
-} from "@/components/ui/dialog";
+import { Check, Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-// Import the RegistrationForm component
-import RegistrationForm from './RegistrationForm'; // Adjust path if needed
-
-// Define plan data with numeric amount (in paisa)
+// Define plan data (ensure IDs match backend PLANS config keys: 'starter', 'pro', 'accelerator')
 const pricingPlans = [
     {
-        id: "starter", // Add a unique ID
+        id: "starter", // Matches backend PLANS key
         name: "Starter Pack",
         originalPrice: null,
         price: "₹0",
@@ -28,13 +21,13 @@ const pricingPlans = [
         priceSuffix: "/ Forever",
         description: "Begin your journey with essential tools.",
         features: [
-        "Essential Counselling Process Guide",
-        "Category-Specific Document Checklist",
-        "Previous Year MHT-CET Cutoffs",
-        "Latest MHT-CET Updates",
-        "Basic College List Generator (5 Uses)",
+            "Essential Counselling Process Guide",
+            "Category-Specific Document Checklist",
+            "Previous Year MHT-CET Cutoffs",
+            "Latest MHT-CET Updates",
+            "Basic College List Generator (5 Uses)", // Limit defined in backend
         ],
-        buttonText: "Start for Free",
+        buttonText: "Select Free Plan",
         bgColor: "bg-white",
         textColor: "text-gray-900",
         buttonBgColor: "bg-black hover:bg-gray-800",
@@ -44,20 +37,20 @@ const pricingPlans = [
         checkColor: "text-green-600",
     },
     {
-        id: "pro", // Add a unique ID
+        id: "pro", // Matches backend PLANS key
         name: "Guidance Pro",
         originalPrice: "₹ 999",
         price: "₹799",
-        amount: 79900, // Amount in paisa (799 * 100)
+        amount: 79900, // Amount in paisa
         priceSuffix: "/ One-Time",
         description: "Personalized guidance to boost your chances.",
         features: [
-        "All Starter Pack Features",
-        "Dedicated Group Support (WhatsApp)",
-        "Personalized 30-Min Expert Session",
-        "Guided Group Form Filling Assistance",
-        "Exclusive Community Access",
-        "Advanced College List Generator (25 Uses)",
+            "All Starter Pack Features",
+            "Dedicated Group Support (WhatsApp)",
+            "Personalized 30-Min Expert Session",
+            "Guided Group Form Filling Assistance",
+            "Exclusive Community Access",
+            "Advanced College List Generator (25 Uses)", // Limit defined in backend
         ],
         buttonText: "Get Guidance Pro",
         bgColor: "bg-gray-800",
@@ -70,21 +63,21 @@ const pricingPlans = [
         checkColor: "text-green-400",
     },
     {
-        id: "accelerator", // Add a unique ID
+        id: "accelerator", // Matches backend PLANS key
         name: "Admission Accelerator",
         originalPrice: "₹ 7999",
         price: "₹3999",
-        amount: 399900, // Amount in paisa (3999 * 100)
+        amount: 399900, // Amount in paisa
         priceSuffix: "/ One-Time",
         description: "Comprehensive support for guaranteed results.",
         features: [
-        "All Guidance Pro Features",
-        "Priority WhatsApp Support (Fast Response)",
-        "In-Depth 1-on-1 Expert Counselling",
-        "Expert-Curated College Preference List",
-        "Dedicated 1-on-1 Form Filling Support",
-        "Donation Admission Guidance",
-        "Unlimited College List Generator Access",
+            "All Guidance Pro Features",
+            "Priority WhatsApp Support (Fast Response)",
+            "In-Depth 1-on-1 Expert Counselling",
+            "Expert-Curated College Preference List",
+            "Dedicated 1-on-1 Form Filling Support",
+            "Donation Admission Guidance",
+            "Unlimited College List Generator Access", // Limit defined in backend
         ],
         buttonText: "Accelerate Admission",
         bgColor: "bg-white",
@@ -99,118 +92,189 @@ const pricingPlans = [
 
 
 export default function Pricing() {
-  // State to manage the selected plan and modal visibility
-  const [selectedPlan, setSelectedPlan] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+    const router = useRouter();
+    // --- State for Auth Check (similar to original Navbar) ---
+    const [user, setUser] = useState(null); // State to hold authenticated user data
+    const [isLoadingUser, setIsLoadingUser] = useState(true); // Track loading state for user check
+    // --- End Auth State ---
 
-  // Function to handle selecting a plan and opening the modal
-  const handleSelectPlan = (plan) => {
-    // For the free plan, maybe redirect directly or show a different message?
-    // For now, we'll open the form even for free, but the form logic should handle amount=0
-    // if (plan.amount === 0) {
-    //   // Handle free plan signup differently if needed
-    //   console.log("Free plan selected");
-    //   // router.push('/signup?plan=free'); // Example
-    //   return;
-    // }
-    setSelectedPlan(plan);
-    setIsModalOpen(true);
-    console.log("Selected Plan:", plan);
-  };
+    const [isProcessingPayment, setIsProcessingPayment] = useState(null); // State for payment initiation loading
 
-  return (
-    <section className="bg-gradient-to-b from-gray-100 to-gray-200 py-16 md:py-24 px-6 sm:px-12 lg:px-20">
-      <div className="container mx-auto text-center">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
-          Unlock Your Admission Success
-        </h2>
-        <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
-          Choose the perfect plan to navigate your college admission journey with confidence and expert support.
-        </p>
+    // Define Backend API URL
+    const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main.onrender.com";
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
-          {pricingPlans.map((plan, index) => (
-            <Card
-              key={plan.id} // Use unique ID for key
-              className={`flex flex-col rounded-xl shadow-lg overflow-hidden ${plan.bgColor} ${plan.textColor} ${plan.badge ? 'border-2 border-gray-600 relative' : 'border'}`}
-            >
-              {plan.badge && (
-                <div className={`absolute top-0 right-0 text-xs font-bold px-3 py-1 rounded-bl-lg ${plan.badgeStyle}`}>
-                  {plan.badge}
+    // --- Fetch user status on component mount (similar to original Navbar) ---
+    useEffect(() => {
+        const fetchUserStatus = async () => {
+            setIsLoadingUser(true);
+            const profileUrl = `${baseApiUrl}/apiv1/users/getUserProfile`; // Use the correct endpoint
+            console.log("Pricing: Attempting to fetch user status from:", profileUrl);
+
+            try {
+                const response = await axios.get(profileUrl, {
+                    withCredentials: true, // Crucial for sending the httpOnly cookie
+                });
+                console.log("Pricing: Received response from profile URL:", response.data);
+
+                // Assuming backend sends { success: true, user: {...} } on success
+                if (response.data && response.data.success && response.data.user) {
+                    setUser(response.data.user);
+                    console.log("Pricing: User authenticated:", response.data.user);
+                } else {
+                    setUser(null);
+                    console.log("Pricing: User not authenticated or response format incorrect.");
+                }
+            } catch (error) {
+                console.error("Pricing: Failed to fetch user status.", error.response?.data || error.message);
+                setUser(null); // Assume not logged in on any error
+            } finally {
+                setIsLoadingUser(false); // Finished loading attempt
+            }
+        };
+
+        fetchUserStatus();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); // Empty dependency array: runs only once on mount
+    // --- End Fetch User Status ---
+
+
+    // Updated function to handle plan selection
+    const handleSelectPlan = async (plan) => {
+        // Show loading indicator while checking auth state initially
+        if (isLoadingUser) {
+            toast.loading("Checking authentication..."); // Use toast or disable button
+            return;
+        }
+
+        // Determine auth status based on local state
+        const isAuthenticated = !!user;
+
+        // 1. Check Authentication
+        if (!isAuthenticated) {
+            toast.error("Please log in or sign up to select a plan.");
+            router.push('/auth/login'); // Redirect to your login page route
+            return;
+        }
+
+        // 2. Handle Free Plan Selection (if logged in)
+        if (plan.amount === 0) {
+            toast.success(`You have selected the ${plan.name}.`);
+            // Optional: Call backend to update plan if necessary
+            // await fetch('/apiv1/users/me/set-plan', { method: 'POST', ..., body: JSON.stringify({ planId: plan.id }) });
+            return;
+        }
+
+        // 3. Handle Paid Plan Selection (if logged in)
+        setIsProcessingPayment(plan.id); // Set loading state for this specific button
+        const loadingToastId = toast.loading(`Initiating payment for ${plan.name}...`);
+        const paymentApiUrl = `${baseApiUrl}/apiv1/payments/initiate-plan`; // Use baseApiUrl
+
+        try {
+            // Use fetch API for payment initiation
+            const response = await fetch(paymentApiUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // No Authorization header needed with HttpOnly cookies
+                },
+                body: JSON.stringify({ planId: plan.id }), // Send only planId
+                credentials: 'include' // IMPORTANT: Send cookies
+            });
+
+            const result = await response.json();
+
+            if (!response.ok || !result.success || !result.redirectUrl) {
+                throw new Error(result.message || `Failed to initiate payment (Status: ${response.status})`);
+            }
+
+            // Success: Redirect to payment gateway
+            toast.success("Redirecting to payment gateway...", { id: loadingToastId });
+            window.location.href = result.redirectUrl; // Redirect
+
+        } catch (error) {
+            console.error("Payment Initiation Failed:", error);
+            toast.error(`Error: ${error.message || 'Could not initiate payment.'}`, { id: loadingToastId });
+        } finally {
+            setIsProcessingPayment(null); // Clear loading state
+        }
+    };
+
+    return (
+        <section className="bg-gradient-to-b from-gray-100 to-gray-200 py-16 md:py-24 px-6 sm:px-12 lg:px-20">
+            <div className="container mx-auto text-center">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
+                    Unlock Your Admission Success
+                </h2>
+                <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+                    Choose the perfect plan to navigate your college admission journey with confidence and expert support.
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+                    {pricingPlans.map((plan) => (
+                        <Card
+                            key={plan.id}
+                            className={`flex flex-col rounded-xl shadow-lg overflow-hidden ${plan.bgColor} ${plan.textColor} ${plan.badge ? 'border-2 border-gray-600 relative' : 'border'}`}
+                        >
+                            {/* Card Header */}
+                            <CardHeader className="px-4 pt-4 pb-2">
+                                <CardTitle className={`text-2xl font-semibold ${plan.badge ? 'text-white' : 'text-gray-800'}`}>{plan.name}</CardTitle>
+                                <CardDescription className={`mt-2 text-sm ${plan.badge ? 'text-gray-300' : 'text-gray-600'}`}>
+                                    {plan.description}
+                                </CardDescription>
+                            </CardHeader>
+
+                            {/* Card Content */}
+                            <CardContent className="flex-grow px-4 pt-2 pb-4 space-y-3">
+                                <div className="mb-4">
+                                    {plan.originalPrice && (
+                                        <p className={`text-xs line-through ${plan.badge ? 'text-gray-400' : 'text-gray-500'}`}>
+                                            {plan.originalPrice}
+                                        </p>
+                                    )}
+                                    <p className={`text-3xl font-bold ${plan.badge ? 'text-white' : 'text-gray-900'}`}>
+                                        {plan.price}
+                                        <span className={`text-base font-normal ml-1 ${plan.badge ? 'text-gray-300' : 'text-gray-500'}`}>
+                                            {plan.priceSuffix}
+                                        </span>
+                                    </p>
+                                </div>
+                                <ul className={`text-left space-y-2 ${plan.badge ? 'text-gray-200' : 'text-gray-700'}`}>
+                                    {plan.features.map((feature, i) => (
+                                        <li key={i} className="flex items-start gap-2 text-sm">
+                                            <Check className={`h-4 w-4 mt-0.5 flex-shrink-0 ${plan.checkColor}`} />
+                                            <span>{feature}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </CardContent>
+
+                            {/* Card Footer with Button */}
+                            <CardFooter className="p-4 mt-auto">
+                                <Button
+                                    size="lg"
+                                    variant={plan.buttonVariant}
+                                    className={cn(
+                                        `w-full rounded-lg ${plan.buttonBgColor} ${plan.buttonTextColor}`,
+                                        // Disable/style loading if auth is loading OR this specific plan payment is processing
+                                        (isLoadingUser || isProcessingPayment === plan.id) && "opacity-70 cursor-not-allowed"
+                                    )}
+                                    onClick={() => handleSelectPlan(plan)}
+                                    disabled={isLoadingUser || isProcessingPayment === plan.id} // Disable button
+                                >
+                                    {/* Show appropriate loading state */}
+                                    {isProcessingPayment === plan.id ? (
+                                        <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing... </>
+                                    ) : isLoadingUser ? (
+                                        <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading... </>
+                                    ) : (
+                                        plan.buttonText // Normal button text
+                                    )}
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    ))}
                 </div>
-              )}
-
-              <CardHeader className="px-4 pt-4 pb-2">
-                <CardTitle className={`text-2xl font-semibold ${plan.badge ? 'text-white' : 'text-gray-800'}`}>{plan.name}</CardTitle>
-                <CardDescription className={`mt-2 text-sm ${plan.badge ? 'text-gray-300' : 'text-gray-600'}`}>
-                  {plan.description}
-                </CardDescription>
-              </CardHeader>
-
-              <CardContent className="flex-grow px-4 pt-2 pb-4 space-y-3">
-                <div className="mb-4">
-                  {plan.originalPrice && (
-                      <p className={`text-xs line-through ${plan.badge ? 'text-gray-400' : 'text-gray-500'}`}>
-                        {plan.originalPrice}
-                      </p>
-                  )}
-                  <p className={`text-3xl font-bold ${plan.badge ? 'text-white' : 'text-gray-900'}`}>
-                    {plan.price}
-                    <span className={`text-base font-normal ml-1 ${plan.badge ? 'text-gray-300' : 'text-gray-500'}`}>
-                      {plan.priceSuffix}
-                    </span>
-                  </p>
-                </div>
-
-                <ul className={`text-left space-y-2 ${plan.badge ? 'text-gray-200' : 'text-gray-700'}`}>
-                  {plan.features.map((feature, i) => (
-                    <li key={i} className="flex items-start gap-2 text-sm">
-                      <Check className={`h-4 w-4 mt-0.5 flex-shrink-0 ${plan.checkColor}`} />
-                      <span>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </CardContent>
-
-              <CardFooter className="p-4 mt-auto">
-                {/* --- Updated Button --- */}
-                <Button
-                  size="lg"
-                  variant={plan.buttonVariant}
-                  className={`w-full rounded-lg ${plan.buttonBgColor} ${plan.buttonTextColor}`}
-                  onClick={() => handleSelectPlan(plan)} // Call handler on click
-                >
-                  {plan.buttonText}
-                </Button>
-                {/* --- End Updated Button --- */}
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* --- Registration Form Dialog --- */}
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto"> {/* Adjust width/height */}
-          <DialogHeader>
-            <DialogTitle>Register for: {selectedPlan?.name || 'Guidance'}</DialogTitle>
-            <DialogDescription>
-              Complete your details below to proceed with the {selectedPlan?.name || 'selected'} plan.
-              {selectedPlan?.amount > 0 && ` Amount: ₹${selectedPlan.amount / 100}`}
-            </DialogDescription>
-          </DialogHeader>
-          {/* Render the form only if a plan is selected */}
-          {selectedPlan && (
-            <RegistrationForm
-              plan={selectedPlan} // Pass the whole plan object
-              onSuccess={() => setIsModalOpen(false)} // Optional: Close modal on success (needs implementation in form)
-            />
-          )}
-           {/* You might want a close button inside the form or rely on the default Dialog close */}
-        </DialogContent>
-      </Dialog>
-      {/* --- End Dialog --- */}
-
-    </section>
-  );
+            </div>
+        </section>
+    );
 }
