@@ -100,15 +100,15 @@ export default function Navbar() {
   }, []); // Empty dependency array: runs only once on mount
 
   // Handle navigation link clicks
-  const handleLinkClick = (e, href) => {
-    // Handle "coming soon" links
-    if (href === '/about') { // Adjusted check for blogs
-      e.preventDefault(); // Prevent default link behavior
-      router.push('/coming-soon'); // Redirect to coming soon page
-    }
-    // Close mobile menu if open
-    setMenuOpen(false);
-  };
+  // const handleLinkClick = (e, href) => {
+  //   // Handle "coming soon" links
+  //   if (href === '/about') { // Adjusted check for blogs
+  //     e.preventDefault(); // Prevent default link behavior
+  //     router.push('/coming-soon'); // Redirect to coming soon page
+  //   }
+  //   // Close mobile menu if open
+  //   setMenuOpen(false);
+  // };
 
   // Navigate to Sign Up page
   const handleSignUp = () => {

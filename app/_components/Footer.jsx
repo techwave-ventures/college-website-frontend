@@ -40,9 +40,9 @@ export default function Footer() {
         <nav className="space-y-2">
           <h6 className="font-semibold text-lg mb-3 text-white uppercase tracking-wider">Company</h6>
           {/* Links from the image */}
-          <a href="#" className="block hover:text-white hover:underline transition duration-300">Home</a>
-          <a href="#" className="block hover:text-white hover:underline transition duration-300">About</a>
-          <a href="#" className="block hover:text-white hover:underline transition duration-300">Contact Us</a>
+          <a href="/" className="block hover:text-white hover:underline transition duration-300">Home</a>
+          <a href="/about" className="block hover:text-white hover:underline transition duration-300">About</a>
+          <a href="/contact-us" className="block hover:text-white hover:underline transition duration-300">Contact Us</a>
           <a href="/privacy-policy" className="block hover:text-white hover:underline transition duration-300">Privacy Policy</a>
           <a href="/return-refund-policy" className="block hover:text-white hover:underline transition duration-300">Return & Refund Policy</a>
           <a href="/terms-of-service" className="block hover:text-white hover:underline transition duration-300">Terms of Service</a>
