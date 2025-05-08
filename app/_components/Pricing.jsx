@@ -15,17 +15,18 @@ const pricingPlans = [
     {
         id: "starter", // Matches backend PLANS key
         name: "Starter Pack",
-        originalPrice: null,
+        originalPrice: "₹ 299",
         price: "₹0",
         amount: 0, // Amount in paisa
-        priceSuffix: "/ Forever",
+        priceSuffix: "/ One Time",
         description: "Begin your journey with essential tools.",
         features: [
+            "College Preference List Generator (3 Uses)", // Limit defined in backend
+            "Access to our MHTCET whatsapp community",
             "Essential Counselling Process Guide",
             "Category-Specific Document Checklist",
             "Previous Year MHT-CET Cutoffs",
             "Latest MHT-CET Updates",
-            "Basic College List Generator (5 Uses)", // Limit defined in backend
         ],
         buttonText: "Select Free Plan",
         bgColor: "bg-white",
@@ -39,18 +40,20 @@ const pricingPlans = [
     {
         id: "pro", // Matches backend PLANS key
         name: "Guidance Pro",
-        originalPrice: "₹ 999",
-        price: "₹799",
-        amount: 79900, // Amount in paisa
+        originalPrice: "₹ 1599",
+        price: "₹999",
+        amount: 99900, // Amount in paisa
         priceSuffix: "/ One-Time",
         description: "Personalized guidance to boost your chances.",
         features: [
             "All Starter Pack Features",
+            "Advanced College Preference List Generator (5 Uses)", // Limit defined in backend
+            "Personalized College Preference List [Expert-Curated]",
+            "Expert-Curated Document Checklist",
+            "Step by Step Guidance at every stage (Document verification, Registration, Form Filling, Freeze/Float/Betterment)",
             "Dedicated Group Support (WhatsApp)",
-            "Personalized 30-Min Expert Session",
-            "Guided Group Form Filling Assistance",
-            "Exclusive Community Access",
-            "Advanced College List Generator (25 Uses)", // Limit defined in backend
+            "Guided Form Filling Assistance",
+            "Exclusive Guidance Pro Community Access",
         ],
         buttonText: "Get Guidance Pro",
         bgColor: "bg-gray-800",
@@ -65,18 +68,19 @@ const pricingPlans = [
     {
         id: "accelerator", // Matches backend PLANS key
         name: "Admission Accelerator",
-        originalPrice: "₹ 7999",
-        price: "₹3999",
-        amount: 399900, // Amount in paisa
+        originalPrice: "₹ 3199",
+        price: "₹1599",
+        amount: 159900, // Amount in paisa
         priceSuffix: "/ One-Time",
         description: "Comprehensive support for guaranteed results.",
         features: [
             "All Guidance Pro Features",
             "Priority WhatsApp Support (Fast Response)",
+            "Exclusive Admission Accelerator Community Access",
             "In-Depth 1-on-1 Expert Counselling",
-            "Expert-Curated College Preference List",
+            "Expert-Curated Personalised College Preference List",
             "Dedicated 1-on-1 Form Filling Support",
-            "Donation Admission Guidance",
+            "Spot Round / Donation Admission Guidance",
             "Unlimited College List Generator Access", // Limit defined in backend
         ],
         buttonText: "Accelerate Admission",
