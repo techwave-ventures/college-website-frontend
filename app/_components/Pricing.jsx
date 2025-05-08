@@ -1,19 +1,20 @@
 // components/Pricing.jsx (or your path)
 "use client";
 
-import React, { useState, useEffect } from 'react'; // Added useEffect
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
-import axios from 'axios'; // Import axios for API calls
+import toast, { Toaster } from 'react-hot-toast'; // Added Toaster import
+import axios from 'axios';
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 // Define plan data (ensure IDs match backend PLANS config keys: 'starter', 'pro', 'accelerator')
+// Use the latest plan details provided by the user
 const pricingPlans = [
     {
-        id: "starter", // Matches backend PLANS key
+        id: "starter",
         name: "Starter Pack",
         originalPrice: "₹ 299",
         price: "₹0",
@@ -21,7 +22,7 @@ const pricingPlans = [
         priceSuffix: "/ One Time",
         description: "Begin your journey with essential tools.",
         features: [
-            "College Preference List Generator (3 Uses)", // Limit defined in backend
+            "College Preference List Generator (3 Uses)",
             "Access to our MHTCET whatsapp community",
             "Essential Counselling Process Guide",
             "Category-Specific Document Checklist",
@@ -29,16 +30,11 @@ const pricingPlans = [
             "Latest MHT-CET Updates",
         ],
         buttonText: "Select Free Plan",
-        bgColor: "bg-white",
-        textColor: "text-gray-900",
-        buttonBgColor: "bg-black hover:bg-gray-800",
-        buttonTextColor: "text-white",
-        buttonVariant: "default",
-        badge: null,
-        checkColor: "text-green-600",
+        bgColor: "bg-white", textColor: "text-gray-900", buttonBgColor: "bg-black hover:bg-gray-800",
+        buttonTextColor: "text-white", buttonVariant: "default", badge: null, checkColor: "text-green-600",
     },
     {
-        id: "pro", // Matches backend PLANS key
+        id: "pro",
         name: "Guidance Pro",
         originalPrice: "₹ 1599",
         price: "₹999",
@@ -47,7 +43,7 @@ const pricingPlans = [
         description: "Personalized guidance to boost your chances.",
         features: [
             "All Starter Pack Features",
-            "Advanced College Preference List Generator (5 Uses)", // Limit defined in backend
+            "Advanced College Preference List Generator (5 Uses)",
             "Personalized College Preference List [Expert-Curated]",
             "Expert-Curated Document Checklist",
             "Step by Step Guidance at every stage (Document verification, Registration, Form Filling, Freeze/Float/Betterment)",
@@ -56,17 +52,12 @@ const pricingPlans = [
             "Exclusive Guidance Pro Community Access",
         ],
         buttonText: "Get Guidance Pro",
-        bgColor: "bg-gray-800",
-        textColor: "text-white",
-        buttonBgColor: "bg-white hover:bg-gray-200",
-        buttonTextColor: "text-gray-800",
-        buttonVariant: "secondary",
-        badge: "Most Popular",
-        badgeStyle: "bg-white text-black",
-        checkColor: "text-green-400",
+        bgColor: "bg-gray-800", textColor: "text-white", buttonBgColor: "bg-white hover:bg-gray-200",
+        buttonTextColor: "text-gray-800", buttonVariant: "secondary", badge: "Most Popular",
+        badgeStyle: "bg-white text-black", checkColor: "text-green-400",
     },
     {
-        id: "accelerator", // Matches backend PLANS key
+        id: "accelerator",
         name: "Admission Accelerator",
         originalPrice: "₹ 3199",
         price: "₹1599",
@@ -81,46 +72,52 @@ const pricingPlans = [
             "Expert-Curated Personalised College Preference List",
             "Dedicated 1-on-1 Form Filling Support",
             "Spot Round / Donation Admission Guidance",
-            "Unlimited College List Generator Access", // Limit defined in backend
+            "Unlimited College List Generator Access",
         ],
         buttonText: "Accelerate Admission",
-        bgColor: "bg-white",
-        textColor: "text-gray-900",
-        buttonBgColor: "bg-black hover:bg-gray-800",
-        buttonTextColor: "text-white",
-        buttonVariant: "default",
-        badge: null,
-        checkColor: "text-green-600",
+        bgColor: "bg-white", textColor: "text-gray-900", buttonBgColor: "bg-black hover:bg-gray-800",
+        buttonTextColor: "text-white", buttonVariant: "default", badge: null, checkColor: "text-green-600",
     },
 ];
 
 
 export default function Pricing() {
     const router = useRouter();
-    // --- State for Auth Check (similar to original Navbar) ---
-    const [user, setUser] = useState(null); // State to hold authenticated user data
-    const [isLoadingUser, setIsLoadingUser] = useState(true); // Track loading state for user check
-    // --- End Auth State ---
-
-    const [isProcessingPayment, setIsProcessingPayment] = useState(null); // State for payment initiation loading
+    const [user, setUser] = useState(null);
+    const [isLoadingUser, setIsLoadingUser] = useState(true);
+    const [isProcessingPayment, setIsProcessingPayment] = useState(null); // Tracks which plan button is loading
 
     // Define Backend API URL
     const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main.onrender.com";
 
-    // --- Fetch user status on component mount (similar to original Navbar) ---
+    // --- Load Razorpay Script ---
+    useEffect(() => {
+        const script = document.createElement('script');
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+        script.async = true;
+        document.body.appendChild(script);
+
+        // Cleanup script on component unmount
+        return () => {
+            const existingScript = document.querySelector('script[src="https://checkout.razorpay.com/v1/checkout.js"]');
+            if (existingScript) {
+                document.body.removeChild(existingScript);
+            }
+        };
+    }, []);
+    // --- End Load Razorpay Script ---
+
+
+    // --- Fetch user status on component mount ---
     useEffect(() => {
         const fetchUserStatus = async () => {
             setIsLoadingUser(true);
-            const profileUrl = `${baseApiUrl}/apiv1/users/getUserProfile`; // Use the correct endpoint
+            const profileUrl = `${baseApiUrl}/apiv1/users/getUserProfile`; // Use the users/getUserProfile endpoint
             console.log("Pricing: Attempting to fetch user status from:", profileUrl);
 
             try {
-                const response = await axios.get(profileUrl, {
-                    withCredentials: true, // Crucial for sending the httpOnly cookie
-                });
+                const response = await axios.get(profileUrl, { withCredentials: true });
                 console.log("Pricing: Received response from profile URL:", response.data);
-
-                // Assuming backend sends { success: true, user: {...} } on success
                 if (response.data && response.data.success && response.data.user) {
                     setUser(response.data.user);
                     console.log("Pricing: User authenticated:", response.data.user);
@@ -130,81 +127,162 @@ export default function Pricing() {
                 }
             } catch (error) {
                 console.error("Pricing: Failed to fetch user status.", error.response?.data || error.message);
-                setUser(null); // Assume not logged in on any error
+                setUser(null);
             } finally {
-                setIsLoadingUser(false); // Finished loading attempt
+                setIsLoadingUser(false);
             }
         };
-
         fetchUserStatus();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); // Empty dependency array: runs only once on mount
+    }, []);
     // --- End Fetch User Status ---
 
 
-    // Updated function to handle plan selection
+    // --- Handle Plan Selection and Initiate Razorpay Payment ---
     const handleSelectPlan = async (plan) => {
-        // Show loading indicator while checking auth state initially
         if (isLoadingUser) {
-            toast.loading("Checking authentication..."); // Use toast or disable button
+            toast.loading("Checking authentication...");
             return;
         }
 
-        // Determine auth status based on local state
         const isAuthenticated = !!user;
 
-        // 1. Check Authentication
         if (!isAuthenticated) {
             toast.error("Please log in or sign up to select a plan.");
-            router.push('/auth/login'); // Redirect to your login page route
+            router.push('/auth/login?redirect=/pricing'); // Redirect to login, then back to pricing
             return;
         }
 
-        // 2. Handle Free Plan Selection (if logged in)
+        // Handle Free Plan (no payment needed)
         if (plan.amount === 0) {
             toast.success(`You have selected the ${plan.name}.`);
-            // Optional: Call backend to update plan if necessary
-            // await fetch('/apiv1/users/me/set-plan', { method: 'POST', ..., body: JSON.stringify({ planId: plan.id }) });
+            // Optional: Call backend to update user's plan to 'starter' if needed
+            // try {
+            //     await axios.post(`${baseApiUrl}/apiv1/users/me/set-plan`, { planId: plan.id }, { withCredentials: true });
+            //     toast.success(`${plan.name} activated!`);
+            // } catch (error) { toast.error(`Failed to activate ${plan.name}.`); }
             return;
         }
 
-        // 3. Handle Paid Plan Selection (if logged in)
-        setIsProcessingPayment(plan.id); // Set loading state for this specific button
+        // Handle Paid Plan - Initiate Razorpay Order
+        setIsProcessingPayment(plan.id);
         const loadingToastId = toast.loading(`Initiating payment for ${plan.name}...`);
-        const paymentApiUrl = `${baseApiUrl}/apiv1/payments/initiate-plan`; // Use baseApiUrl
+        const paymentInitiateUrl = `${baseApiUrl}/apiv1/payments/initiate-plan`; // Backend endpoint to create Razorpay order
 
         try {
-            // Use fetch API for payment initiation
-            const response = await fetch(paymentApiUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // No Authorization header needed with HttpOnly cookies
-                },
-                body: JSON.stringify({ planId: plan.id }), // Send only planId
-                credentials: 'include' // IMPORTANT: Send cookies
-            });
+            // 1. Call backend to create Razorpay order
+            const orderResponse = await axios.post(paymentInitiateUrl,
+                { planId: plan.id }, // Send planId, backend gets userId from auth
+                { withCredentials: true }
+            );
 
-            const result = await response.json();
+            const orderResult = orderResponse.data;
 
-            if (!response.ok || !result.success || !result.redirectUrl) {
-                throw new Error(result.message || `Failed to initiate payment (Status: ${response.status})`);
+            if (!orderResult.success || !orderResult.order_id) {
+                throw new Error(orderResult.message || 'Failed to create payment order.');
             }
 
-            // Success: Redirect to payment gateway
-            toast.success("Redirecting to payment gateway...", { id: loadingToastId });
-            window.location.href = result.redirectUrl; // Redirect
+            console.log("Razorpay Order Created:", orderResult);
+
+            // 2. Prepare Razorpay Checkout options
+            const razorpayOptions = {
+                key: orderResult.key_id, // Your Razorpay Key ID from backend
+                amount: orderResult.amount, // Amount in paisa from backend
+                currency: orderResult.currency,
+                name: "Campus Sathi", // Your Brand Name
+                description: `Payment for ${orderResult.planName || plan.name}`, // Description
+                // image: "/your_logo.png", // Optional logo
+                order_id: orderResult.order_id, // Crucial: Order ID from backend
+                // --- Handler function called on successful payment in Razorpay modal ---
+                handler: async function (response) {
+                    console.log("Razorpay Success Response:", response);
+                    const verifyUrl = `${baseApiUrl}/apiv1/payments/verify-razorpay`; // Your backend verification endpoint
+                    const verificationToastId = toast.loading("Verifying payment...");
+
+                    try {
+                        // 3. Call backend to verify payment signature
+                        const verifyRes = await axios.post(verifyUrl, {
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                        }, { withCredentials: true }); // Send cookies for auth
+
+                        if (verifyRes.data.success) {
+                            toast.success("Payment Verified! Plan activated.", { id: verificationToastId });
+                            // Redirect or update UI to reflect activated plan
+                            router.push('/user-dashboard'); // Example redirect
+                        } else {
+                            throw new Error(verifyRes.data.message || "Payment verification failed on server.");
+                        }
+                    } catch (verifyError) {
+                        console.error("Payment Verification Failed:", verifyError);
+                        const errorMsg = verifyError.response?.data?.message || verifyError.message || 'Payment verification failed.';
+                        toast.error(`Error: ${errorMsg}`, { id: verificationToastId });
+                        // Redirect to payment status page with error?
+                        // router.push('/payment-status?status=failure');
+                    }
+                },
+                // --- Prefill user details ---
+                prefill: orderResult.prefill || {},
+                notes: orderResult.notes || {},
+                theme: orderResult.theme || { color: '#4f46e5' }, // Default theme
+                // --- Handler for payment failure within Razorpay modal ---
+                modal: {
+                    ondismiss: function() {
+                        console.log('Razorpay checkout modal dismissed.');
+                        toast.error('Payment process cancelled.');
+                        setIsProcessingPayment(null); // Reset button loading state if modal is closed
+                    }
+                },
+                 // You can also add a specific handler for payment failure events
+                 // "handler" above is only called on SUCCESS within the modal
+                 // To handle explicit failures reported by Razorpay:
+                 // This needs to be configured carefully based on Razorpay's event structure
+                 // Example (Conceptual - check Razorpay docs for exact event structure):
+                 // payment_failed_handler: function (response) {
+                 //    console.error("Razorpay Payment Failed Event:", response);
+                 //    toast.error(`Payment Failed: ${response.error?.description || response.error?.reason || 'Unknown Razorpay error'}`);
+                 // }
+            };
+
+            // Check if Razorpay script is loaded
+            if (!window.Razorpay) {
+                toast.error("Payment gateway script not loaded. Please refresh.", { id: loadingToastId });
+                setIsProcessingPayment(null);
+                return;
+            }
+
+            // 4. Open Razorpay Checkout Modal
+            const rzp = new window.Razorpay(razorpayOptions);
+
+            // Add event listener specifically for payment failure
+            rzp.on('payment.failed', function (response){
+                 console.error("Razorpay Payment Failed Event:", response.error);
+                 const reason = response.error?.reason || 'Unknown error';
+                 const description = response.error?.description || 'Payment could not be completed.';
+                 toast.error(`Payment Failed: ${description} (Reason: ${reason})`);
+                 // Optionally update parent error state or redirect
+                 // setError(`Payment Failed: ${reason}`);
+            });
+
+            rzp.open();
+            toast.dismiss(loadingToastId); // Dismiss "Initiating" toast once modal opens
 
         } catch (error) {
             console.error("Payment Initiation Failed:", error);
-            toast.error(`Error: ${error.message || 'Could not initiate payment.'}`, { id: loadingToastId });
+            const errorMessage = error.response?.data?.message || error.message || 'Could not initiate payment.';
+            toast.error(`Error: ${errorMessage}`, { id: loadingToastId });
         } finally {
-            setIsProcessingPayment(null); // Clear loading state
+            // Reset loading state ONLY if modal wasn't opened or if initiation failed before opening
+             // If rzp.open() was called successfully, the modal dismiss/success handler should reset it.
+             // However, adding it here ensures it resets if the try block fails before rzp.open()
+             setIsProcessingPayment(null);
         }
     };
 
     return (
-        <section className="bg-gradient-to-b from-gray-100 to-gray-200 py-16 md:py-24 px-6 sm:px-12 lg:px-20">
+        <section className="bg-gradient-to-b from-gray-100 to-gray-200 py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+            <Toaster position="top-right" /> {/* Ensure Toaster is present */}
             <div className="container mx-auto text-center">
                 <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
                     Unlock Your Admission Success
@@ -217,61 +295,69 @@ export default function Pricing() {
                     {pricingPlans.map((plan) => (
                         <Card
                             key={plan.id}
-                            className={`flex flex-col rounded-xl shadow-lg overflow-hidden ${plan.bgColor} ${plan.textColor} ${plan.badge ? 'border-2 border-gray-600 relative' : 'border'}`}
+                            className={cn(
+                                "flex flex-col rounded-xl shadow-lg overflow-hidden border transition-all duration-300 hover:shadow-2xl",
+                                plan.bgColor,
+                                plan.textColor,
+                                plan.badge ? "ring-2 ring-offset-2 ring-indigo-500" : "border-gray-200"
+                            )}
                         >
-                            {/* Card Header */}
-                            <CardHeader className="px-4 pt-4 pb-2">
-                                <CardTitle className={`text-2xl font-semibold ${plan.badge ? 'text-white' : 'text-gray-800'}`}>{plan.name}</CardTitle>
-                                <CardDescription className={`mt-2 text-sm ${plan.badge ? 'text-gray-300' : 'text-gray-600'}`}>
+                            {plan.badge && (
+                                <div className={cn(
+                                    "absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-3 py-1 text-sm font-semibold rounded-full shadow-md",
+                                    plan.badgeStyle || "bg-indigo-600 text-white"
+                                )}>
+                                    {plan.badge}
+                                </div>
+                            )}
+                            <CardHeader className="p-6 text-center">
+                                <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
+                                <CardDescription className={cn("mt-2 text-sm", plan.badge ? 'text-gray-300' : 'text-gray-500')}>
                                     {plan.description}
                                 </CardDescription>
                             </CardHeader>
 
-                            {/* Card Content */}
-                            <CardContent className="flex-grow px-4 pt-2 pb-4 space-y-3">
-                                <div className="mb-4">
+                            <CardContent className="flex-grow p-6 space-y-3">
+                                <div className="mb-6 text-center">
                                     {plan.originalPrice && (
-                                        <p className={`text-xs line-through ${plan.badge ? 'text-gray-400' : 'text-gray-500'}`}>
+                                        <p className={cn("text-sm line-through", plan.badge ? 'text-gray-400' : 'text-gray-500')}>
                                             {plan.originalPrice}
                                         </p>
                                     )}
-                                    <p className={`text-3xl font-bold ${plan.badge ? 'text-white' : 'text-gray-900'}`}>
+                                    <p className={cn("text-4xl font-extrabold", plan.badge ? 'text-white' : 'text-gray-900')}>
                                         {plan.price}
-                                        <span className={`text-base font-normal ml-1 ${plan.badge ? 'text-gray-300' : 'text-gray-500'}`}>
+                                        <span className={cn("text-base font-medium ml-1", plan.badge ? 'text-gray-300' : 'text-gray-500')}>
                                             {plan.priceSuffix}
                                         </span>
                                     </p>
                                 </div>
-                                <ul className={`text-left space-y-2 ${plan.badge ? 'text-gray-200' : 'text-gray-700'}`}>
+                                <ul className={cn("text-left space-y-2.5", plan.badge ? 'text-gray-200' : 'text-gray-700')}>
                                     {plan.features.map((feature, i) => (
-                                        <li key={i} className="flex items-start gap-2 text-sm">
-                                            <Check className={`h-4 w-4 mt-0.5 flex-shrink-0 ${plan.checkColor}`} />
+                                        <li key={i} className="flex items-start gap-3 text-sm">
+                                            <Check className={cn("h-5 w-5 mt-0.5 flex-shrink-0", plan.checkColor)} />
                                             <span>{feature}</span>
                                         </li>
                                     ))}
                                 </ul>
                             </CardContent>
 
-                            {/* Card Footer with Button */}
-                            <CardFooter className="p-4 mt-auto">
+                            <CardFooter className="p-6 mt-auto">
                                 <Button
                                     size="lg"
                                     variant={plan.buttonVariant}
                                     className={cn(
-                                        `w-full rounded-lg ${plan.buttonBgColor} ${plan.buttonTextColor}`,
-                                        // Disable/style loading if auth is loading OR this specific plan payment is processing
+                                        `w-full rounded-lg font-semibold py-3 ${plan.buttonBgColor} ${plan.buttonTextColor}`,
                                         (isLoadingUser || isProcessingPayment === plan.id) && "opacity-70 cursor-not-allowed"
                                     )}
                                     onClick={() => handleSelectPlan(plan)}
-                                    disabled={isLoadingUser || isProcessingPayment === plan.id} // Disable button
+                                    disabled={isLoadingUser || isProcessingPayment === plan.id}
                                 >
-                                    {/* Show appropriate loading state */}
                                     {isProcessingPayment === plan.id ? (
                                         <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing... </>
-                                    ) : isLoadingUser ? (
+                                    ) : isLoadingUser && plan.amount > 0 ? (
                                         <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading... </>
                                     ) : (
-                                        plan.buttonText // Normal button text
+                                        plan.buttonText
                                     )}
                                 </Button>
                             </CardFooter>
