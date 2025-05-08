@@ -56,15 +56,15 @@ export default function Footer() {
           <h6 className="font-semibold text-lg mb-3 text-white uppercase tracking-wider">Follow Us</h6>
           <div className="flex space-x-4 justify-center md:justify-start">
              {/* WhatsApp */}
-            <a href="https://wa.me/919209143384" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="text-gray-400 hover:text-white hover:scale-110 transition duration-300">
+            <a href="https://chat.whatsapp.com/LFSzcsrP4MrLWQcjMTg19Y" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" className="text-gray-400 hover:text-white hover:scale-110 transition duration-300">
               <WhatsAppIcon />
             </a>
              {/* YouTube - Replace '#' with your actual URL */}
-            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-gray-400 hover:text-white hover:scale-110 transition duration-300">
+            <a href="https://www.youtube.com/@campus-sathi" target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="text-gray-400 hover:text-white hover:scale-110 transition duration-300">
               <YouTubeIcon />
             </a>
              {/* Instagram - Replace '#' with your actual URL */}
-            <a href="#" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-400 hover:text-white hover:scale-110 transition duration-300">
+            <a href="https://www.instagram.com/campussathi/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="text-gray-400 hover:text-white hover:scale-110 transition duration-300">
               <InstagramIcon />
             </a>
           </div>
