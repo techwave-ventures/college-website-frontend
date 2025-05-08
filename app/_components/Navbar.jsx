@@ -34,7 +34,7 @@ const Logo = () => (
 const navLinks = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About" }, // Marked as coming soon in handler
-  { href: "/ExploreColleges", label: "Explore Colleges" },
+  { href: "/coming-soon", label: "Explore Colleges" },
   { href: "/blogs/MHTCET", label: "Blogs" }, // Marked as coming soon in handler
 ];
 
