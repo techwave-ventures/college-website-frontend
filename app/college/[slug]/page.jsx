@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from "@/lib/utils";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://college-website-backend-main.onrender.com/apiv1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://college-website-backend-main.onrender.com/apiv1"; // Ensure this is set in your environment variables
 const FALLBACK_IMAGE_URL = "https://placehold.co/600x400/e2e8f0/cbd5e1?text=College+Image"; // Light theme placeholder
 
 // Define sections for the sidebar and content linking
@@ -53,7 +53,10 @@ export default function CollegeDetailPage() {
       setYoutubeVideos([]);
       setError(null);
       try {
-        const response = await axios.get(`${API_BASE_URL}/college/slug/${slug}`);
+        // const response = await axios.get(`${API_BASE_URL}/college/slug/${slug}`);
+        const collegeIdentifier = encodeURIComponent(slug); // Or collegeNameOrSlugFromParams if that's your variable
+
+        const response = await axios.get(`${API_BASE_URL}/gemini/college-info/${collegeIdentifier}`);        
         if (response.data.success && response.data.college) {
           const fetchedCollege = response.data.college;
           setCollege(fetchedCollege);
@@ -177,7 +180,7 @@ export default function CollegeDetailPage() {
                     <Info size={24} /> About {college.name}
                 </h2>
                 <p className="leading-relaxed whitespace-pre-wrap">
-                  {college.description || 'No description available.'}
+                  {college.desc || 'No description available.'}
                 </p>
               </section>
 
