@@ -6,8 +6,8 @@ import { useParams } from 'next/navigation';
 import axios from 'axios';
 import Navbar from '../../_components/Navbar'; // Adjust path
 import Footer from '../../_components/Footer';   // Adjust path
-import CollegeDetailSidebar from '../../_components/CollegeDetailSidebar'; // Import the sidebar
-import { Loader2, MapPin, CalendarDays, Building, GraduationCap, Briefcase, Info, Image as ImageIcon, CheckCircle, Book, Users, BarChartHorizontal, DollarSign } from 'lucide-react';
+import CollegeDetailSidebar from '../../_components/CollegeDetailSidebar'; // Ensure this path is correct
+import { Loader2, MapPin, CalendarDays, Building, GraduationCap, Briefcase, Info, Image as ImageIcon, CheckCircle, Book, Users, BarChartHorizontal, DollarSign, Youtube } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from "@/lib/utils";
@@ -24,6 +24,7 @@ const pageSections = [
     { id: "placements", title: "Placement Highlights" },
     { id: "infrastructure", title: "Infrastructure" },
     { id: "gallery", title: "Gallery" },
+    { id: "videos", title: "Videos" },
     { id: "review", title: "Review Summary" },
 ];
 
@@ -34,6 +35,10 @@ export default function CollegeDetailPage() {
   const [college, setCollege] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [googleFetchedImages, setGoogleFetchedImages] = useState([]);
+  const [loadingGoogleImages, setLoadingGoogleImages] = useState(false);
+  const [youtubeVideos, setYoutubeVideos] = useState([]);
+  const [loadingYoutubeVideos, setLoadingYoutubeVideos] = useState(false);
 
   useEffect(() => {
     if (!slug) {
@@ -44,12 +49,41 @@ export default function CollegeDetailPage() {
 
     const fetchCollegeData = async () => {
       setLoading(true);
+      setGoogleFetchedImages([]);
+      setYoutubeVideos([]);
       setError(null);
       try {
         const response = await axios.get(`${API_BASE_URL}/college/slug/${slug}`);
         if (response.data.success && response.data.college) {
-          setCollege(response.data.college);
-          console.log("Fetched College Data:", response.data.college);
+          const fetchedCollege = response.data.college;
+          setCollege(fetchedCollege);
+          console.log("Fetched College Data:", fetchedCollege);
+
+          if (!fetchedCollege.images || fetchedCollege.images.length === 0) {
+            setLoadingGoogleImages(true);
+            try {
+              const imageSearchResponse = await axios.get(`${API_BASE_URL}/college/college-images/search?collegeName=${encodeURIComponent(fetchedCollege.name)}`);
+              if (imageSearchResponse.data.success && imageSearchResponse.data.images) {
+                setGoogleFetchedImages(imageSearchResponse.data.images);
+              }
+            } catch (imageError) {
+              console.error("Error fetching Google images via Next.js API:", imageError.response?.data || imageError.message);
+            } finally {
+              setLoadingGoogleImages(false);
+            }
+          }
+          // Fetch YouTube videos
+          setLoadingYoutubeVideos(true);
+          try {
+            const videoSearchResponse = await axios.get(`${API_BASE_URL}/college/college-videos/search?collegeName=${encodeURIComponent(fetchedCollege.name)}`);
+            if (videoSearchResponse.data.success && videoSearchResponse.data.videos) {
+                setYoutubeVideos(videoSearchResponse.data.videos);
+            }
+          } catch (videoError) {
+            console.error("Error fetching YouTube videos via Next.js API:", videoError.response?.data || videoError.message);
+          } finally {
+            setLoadingYoutubeVideos(false);
+          }
         } else {
           throw new Error(response.data.message || "College not found");
         }
@@ -61,13 +95,13 @@ export default function CollegeDetailPage() {
         setLoading(false);
       }
     };
-
     fetchCollegeData();
   }, [slug]);
 
+
   if (loading) {
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50"> {/* Light theme loading bg */}
+        <div className="flex flex-col min-h-screen bg-gray-50"> {/* Reverted to Light theme */}
           <Navbar />
           <main className="flex-grow flex items-center justify-center pt-20">
             <Loader2 className="h-16 w-16 animate-spin text-gray-500" />
@@ -78,7 +112,7 @@ export default function CollegeDetailPage() {
   }
   if (error) {
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50"> {/* Light theme error bg */}
+        <div className="flex flex-col min-h-screen bg-gray-50"> {/* Reverted to Light theme */}
           <Navbar />
           <main className="flex-grow flex items-center justify-center pt-20 px-4">
             <div className="text-center text-red-600 bg-red-100 p-6 rounded-lg shadow border border-red-200"> {/* Light theme error card */}
@@ -92,7 +126,7 @@ export default function CollegeDetailPage() {
   }
   if (!college) {
     return (
-        <div className="flex flex-col min-h-screen bg-gray-50"> {/* Light theme not found bg */}
+        <div className="flex flex-col min-h-screen bg-gray-50"> {/* Reverted to Light theme */}
           <Navbar />
           <main className="flex-grow flex items-center justify-center pt-20">
             <p className="text-xl text-gray-500">College not found.</p>
@@ -102,8 +136,11 @@ export default function CollegeDetailPage() {
       );
   }
 
+  const displayImages = (college?.images && college.images.length > 0) ? college.images : googleFetchedImages;
+  const displayVideos = youtubeVideos;
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50"> {/* Main page light background */}
+    <div className="flex flex-col min-h-screen bg-gray-50"> {/* Light theme background */}
       <Navbar />
       <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
         {/* Header Section */}
@@ -126,14 +163,12 @@ export default function CollegeDetailPage() {
           </div>
         </section>
 
-        {/* Main layout with Sidebar */}
         <div className="flex flex-col md:flex-row">
-          {/* Assuming CollegeDetailSidebar is also styled for light theme or adapts */}
+          {/* Ensure CollegeDetailSidebar is styled for light theme */}
           <CollegeDetailSidebar sections={pageSections} />
 
-          {/* Scrollable Content Area - Wrapped in a single Card */}
           <Card className="flex-grow md:pl-4 p-6 md:p-8 shadow-lg border border-gray-200 bg-white"> {/* Light theme card */}
-            {/* Remove prose-invert for light theme */}
+            {/* Removed prose-invert, default prose text is dark */}
             <CardContent className="prose prose-sm sm:prose-base lg:prose-lg max-w-none text-gray-700">
 
               {/* About Section */}
@@ -202,7 +237,7 @@ export default function CollegeDetailPage() {
                 <div className="space-y-1 text-gray-700 not-prose text-sm">
                   {college.courses && college.courses.some(c => c.placements) ? (
                      college.courses.map(course => course.placements && (
-                        <div key={`placement-${course._id || course.name}`} className="mb-2 pb-1 border-b border-gray-100 last:border-b-0 last:pb-0">
+                        <div key={`placement-${course._id || course.name}`} className="mb-2 pb-1 border-b border-gray-100 last:border-b-0 last:pb-0"> {/* Light theme border */}
                              <h4 className="font-medium text-gray-700">{course.name} Placements:</h4>
                              <p><span className="font-semibold">Average Package:</span> ₹{course.placements.averageSalary?.toLocaleString('en-IN') || 'N/A'} LPA</p>
                              <p><span className="font-semibold">Highest Package:</span> ₹{course.placements.highestSalary?.toLocaleString('en-IN') || 'N/A'} LPA</p>
@@ -232,34 +267,57 @@ export default function CollegeDetailPage() {
                   ) : (<p className="italic text-gray-500">Infrastructure details not provided.</p>)}
               </section>
 
-              {/* Image Gallery */}
+              {/* Image Gallery Section */}
               <section id="gallery" className="scroll-mt-24 mb-10">
                 <h2 className="flex items-center gap-2 !mb-3 text-indigo-600"><ImageIcon size={24}/> Gallery</h2>
-                  {college.images && college.images.length > 0 ? (
+                  {loadingGoogleImages && ( <div className="flex justify-center items-center p-4"><Loader2 className="h-8 w-8 animate-spin text-gray-500" /><p className="ml-2 text-sm text-gray-500">Loading images...</p></div> )}
+                  {!loadingGoogleImages && displayImages && displayImages.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 not-prose">
-                      {college.images.map((image) => (
-                        <img
-                          key={image._id || image.imageUrl}
-                          src={image.imageUrl || FALLBACK_IMAGE_URL}
-                          alt={`${college.name} Gallery Image`}
-                          className="w-full h-32 object-cover rounded-md border border-gray-200 hover:opacity-80 transition-opacity cursor-pointer" // Light theme border
-                          onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_IMAGE_URL; }}
-                          onClick={() => window.open(image.imageUrl, '_blank')}
-                        />
+                      {displayImages.map((image, index) => (
+                        <div key={image._id || image.imageUrl || `gimg-${index}`} className="relative w-full overflow-hidden rounded-md border border-gray-200 group cursor-pointer hover:shadow-lg" style={{ paddingTop: '75%' /* 3/4 = 75% for 4:3 */ }} onClick={() => window.open(image.imageUrl || image, '_blank')}>
+                          <img
+                            src={image.imageUrl || image || FALLBACK_IMAGE_URL}
+                            alt={`${college.name} Gallery Image ${index + 1}`}
+                            className="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            onError={(e) => { e.target.onerror = null; e.target.src = FALLBACK_IMAGE_URL; }}
+                          />
+                        </div>
                       ))}
                     </div>
-                  ) : (<p className="italic text-gray-500">No gallery images available.</p>)}
+                  ) : ( !loadingGoogleImages && <p className="italic text-gray-500">No gallery images available.</p> )}
+              </section>
+
+              {/* YouTube Videos Section */}
+              <section id="videos" className="scroll-mt-24 mb-10">
+                <h2 className="flex items-center gap-2 !mb-3 text-indigo-600"><Youtube size={24}/> Videos</h2>
+                {loadingYoutubeVideos && ( <div className="flex justify-center items-center p-4"><Loader2 className="h-8 w-8 animate-spin text-gray-500" /><p className="ml-2 text-sm text-gray-500">Loading videos...</p></div> )}
+                {!loadingYoutubeVideos && displayVideos && displayVideos.length > 0 ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 not-prose">
+                        {displayVideos.map((video) => (
+                            <div key={video.videoId} className="bg-gray-100 p-3 rounded-lg border border-gray-200">
+                                {/* --- MODIFICATION: Apply 4:3 aspect ratio --- */}
+                                <div className="aspect-w-4 aspect-h-3 mb-2"> {/* Changed from aspect-w-16 aspect-h-9 */}
+                                    <iframe
+                                        src={`https://www.youtube.com/embed/${video.videoId}`}
+                                        title={video.title}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                        className="w-full h-full rounded"
+                                    ></iframe>
+                                </div>
+                                {/* --- END MODIFICATION --- */}
+                                <h4 className="text-sm font-semibold text-gray-800 truncate" title={video.title}>{video.title}</h4>
+                            </div>
+                        ))}
+                    </div>
+                ) : ( !loadingYoutubeVideos && <p className="italic text-gray-500">No relevant videos found for this college.</p> )}
               </section>
 
               {/* Review Summary */}
               <section id="review" className="scroll-mt-24">
                 {college.review && (
-                  <>
-                    <h2 className="flex items-center gap-2 !mb-3 text-indigo-600"><BarChartHorizontal size={24}/> Review Summary</h2>
-                    <p className="leading-relaxed italic">
-                      "{college.review}"
-                    </p>
-                  </>
+                  <> <h2 className="flex items-center gap-2 !mb-3 text-indigo-600"><BarChartHorizontal size={24}/> Review Summary</h2> <p className="leading-relaxed italic"> "{college.review}" </p> </>
                 )}
               </section>
 
