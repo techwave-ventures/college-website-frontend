@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Your Campus Friend",
+  title: "Campus Sathi",
   description: "Your Campus Friend",
 };
 
