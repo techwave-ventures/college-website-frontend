@@ -9,12 +9,12 @@ import Footer from "../_components/Footer"; // Adjust path as needed
 import { GraduationCap, Target, Lightbulb, Users, Compass } from 'lucide-react'; // Icons
 import { Button } from "@/components/ui/button"; // Assuming shadcn/ui Button
 
-export const metadata = {
-  title: 'About Campus Sathi | Your MHT-CET Admission Guide',
-  description: 'Learn about Campus Sathi\'s mission to simplify the MHT-CET admission journey for students across Maharashtra with data-driven insights and personalized guidance.',
-  // You can add other metadata fields here too:
-  keywords: ['MHT-CET', 'About Campus Sathi', 'College Counseling Maharashtra', 'TechWave Ventures'],
-};
+// export const metadata = {
+//   title: 'About Campus Sathi | Your MHT-CET Admission Guide',
+//   description: 'Learn about Campus Sathi\'s mission to simplify the MHT-CET admission journey for students across Maharashtra with data-driven insights and personalized guidance.',
+//   // You can add other metadata fields here too:
+//   keywords: ['MHT-CET', 'About Campus Sathi', 'College Counseling Maharashtra', 'TechWave Ventures'],
+// };
 
 export default function AboutPage() {
 
