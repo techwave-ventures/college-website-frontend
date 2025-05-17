@@ -56,6 +56,18 @@ async function getMhtCetBlogPosts() {
 }
 
 
+
+// --- Add this metadata object for the Counselling Process page ---
+export const metadata = {
+  title: 'MHT-CET 2025 Counselling Process Explained',
+  description: 'Step-by-step guide to the MHT-CET 2025 counselling process (CAP Rounds), including registration, document upload, choice filling, seat allotment, and admission confirmation for engineering and pharmacy in Maharashtra.',
+  keywords: ['MHT-CET counselling', 'MHT-CET 2025 process', 'CAP rounds Maharashtra', 'engineering admission process', 'pharmacy admission process', 'choice filling MHT-CET', 'seat allotment MHT-CET', 'Campus Sathi'],
+};
+// --- End metadata object ---
+
+
+
+
 // --- Main Page Component (Now Async Server Component) ---
 export default async function MhtCetCounsellingProcessPage() {
 

@@ -56,6 +56,19 @@ async function getMhtCetBlogPosts() {
 }
 
 
+
+
+// --- Add this metadata object for the Document Checklist page ---
+export const metadata = {
+  title: 'MHT-CET Document Checklist & FAQs',
+  description: 'Complete category-wise document checklist for MHT-CET 2025 counselling. Find answers to common questions about required documents for engineering and pharmacy admissions in Maharashtra.',
+  keywords: ['MHT-CET documents', 'MHT-CET checklist', 'counselling documents', 'Maharashtra engineering admission documents', 'document verification MHT-CET', 'Campus Sathi'],
+};
+// --- End metadata object ---
+
+
+
+
 // --- Main Page Component (Now Async Server Component) ---
 export default async function MhtCetDocumentChecklistPage() {
 

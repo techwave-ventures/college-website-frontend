@@ -15,6 +15,55 @@ import { cn } from "@/lib/utils";
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://college-website-backend-main.onrender.com/apiv1"; // Ensure this is set in your environment variables
 const FALLBACK_IMAGE_URL = "https://placehold.co/600x400/e2e8f0/cbd5e1?text=College+Image"; // Light theme placeholder
 
+
+
+// --- Add this generateMetadata function ---
+export async function generateMetadata({ params }) {
+  const slug = params?.slug;
+  if (!slug) {
+    return {
+      title: 'College Details',
+      description: 'Detailed information about engineering colleges in Maharashtra.',
+    };
+  }
+
+  try {
+    // Fetch minimal data needed for the title/description
+    // This call should be quick and only fetch name/location or a short description
+    const response = await axios.get(`${API_BASE_URL}/college/slug/${slug}`); // Or your Gemini endpoint if that's primary
+    const college = response.data?.college;
+
+    if (college) {
+      return {
+        title: `${college.name} | Details, Courses & Cutoffs`,
+        description: `Explore details for ${college.name}, ${college.location}. Find information on courses, admission process, fees, placements, and more.`,
+        // openGraph: {
+        //   title: `${college.name} | Campus Sathi`,
+        //   description: `Details for ${college.name}.`,
+        //   images: [{ url: college.avatarImage?.imageUrl || 'default-og-image.png' }],
+        // },
+      };
+    }
+  } catch (error) {
+    console.error("Error fetching metadata for college slug:", slug, error);
+    // Fallback metadata if API call fails
+    return {
+      title: 'College Not Found',
+      description: 'The requested college details could not be found.',
+    };
+  }
+
+  // Default fallback if no college data
+  return {
+    title: 'College Details',
+    description: 'Detailed information about colleges for MHT-CET aspirants.',
+  };
+}
+// --- End generateMetadata function ---
+
+
+
+
 // Define sections for the sidebar and content linking
 const pageSections = [
     { id: "about-college", title: "About College" },

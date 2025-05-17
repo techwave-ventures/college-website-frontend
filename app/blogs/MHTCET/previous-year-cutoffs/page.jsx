@@ -43,6 +43,16 @@ async function getMhtCetBlogPosts() {
   return postData;
 }
 
+
+
+// --- Add this metadata object for the Cutoff Explorer page ---
+export const metadata = {
+  title: 'MHT-CET Cutoff Explorer',
+  description: 'Explore official MHT-CET engineering cutoff PDFs for 2022, 2023, and 2024 admission years. Analyze trends and plan your college preferences for Maharashtra.',
+  keywords: ['MHT-CET cutoffs', 'MHT-CET 2024 cutoffs', 'MHT-CET 2023 cutoffs', 'MHT-CET 2022 cutoffs', 'engineering cutoffs Maharashtra', 'CAP round cutoffs', 'college cutoff explorer', 'Campus Sathi'],
+};
+// --- End metadata object ---
+
 // --- Main Page Component (Async Server Component) ---
 export default async function MhtCetCutoffExplorerPage() {
 
