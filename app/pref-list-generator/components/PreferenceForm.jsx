@@ -19,18 +19,92 @@ import { cn } from "@/lib/utils";
 // --- Static Data & Branch Clusters ---
 const placesList = ["Ahmednagar", "Akola", "Amravati", "Aurangabad", "Beed", "Bhandara", "Buldhana", "Chandrapur", "Dhule", "Jalgaon", "Jalna", "Kolhapur", "Latur", "Mumbai", "Nagpur", "Nanded", "Nandurbar", "Nashik", "Navi Mumbai", "Osmanabad", "Palghar", "Parbhani", "Pune", "Raigad", "Ratnagiri", "Sangli", "Satara", "Shirgaon", "Sindhudurg", "Solapur", "Thane", "Wardha", "Washim", "Yavatmal", "solapur"];
 const categoriesList = ['General', 'OBC', 'EWS', 'VJ', 'NT', 'DT', 'SC', 'ST', 'TFWS'];
-const allBranchesList = ["5G", "Aeronautical Engineering", /* ... other branches ... */ "VLSI"]; // Ensure this list is complete
+// This is the complete list of all unique branches.
+const allBranchesList = [
+    "5G", "Aeronautical Engineering", "Agricultural Engineering", "Artificial Intelligence",
+    "Artificial Intelligence (AI) and Data Science", "Artificial Intelligence and Data Science",
+    "Artificial Intelligence and Machine Learning", "Automation and Robotics", "Automobile Engineering",
+    "Bio Medical Engineering", "Bio Technology", "Chemical Engineering", "Civil Engineering",
+    "Civil Engineering and Planning", "Civil and Environmental Engineering", "Civil and infrastructure Engineering",
+    "Computer Engineering", "Computer Engineering (Software Engineering)", "Computer Science",
+    "Computer Science and Business Systems", "Computer Science and Design", "Computer Science and Engineering",
+    "Computer Science and Engineering (Artificial Intelligence and Data Science)",
+    "Computer Science and Engineering (Artificial Intelligence)",
+    "Computer Science and Engineering (Cyber Security)",
+    "Computer Science and Engineering (Internet of Things and Cyber Security Including Block Chain Technology)",
+    "Computer Science and Engineering (IoT)",
+    "Computer Science and Engineering(Artificial Intelligence and Machine Learning)",
+    "Computer Science and Engineering(Cyber Security)", "Computer Science and Engineering(Data Science)",
+    "Computer Science and Information Technology", "Computer Science and Technology", "Computer Technology",
+    "Cyber Security", "Data Engineering", "Data Science", "Dyestuff Technology",
+    "Electrical Engg [Electrical and Power]", "Electrical Engg[Electronics and Power]", "Electrical Engineering",
+    "Electrical and Computer Engineering", "Electrical and Electronics Engineering", "Electronics Engineering",
+    "Electronics Engineering ( VLSI Design and Technology)", "Electronics and Biomedical Engineering",
+    "Electronics and Communication (Advanced Communication Technology)", "Electronics and Communication Engineering",
+    "Electronics and Communication(Advanced Communication Technology)", "Electronics and Computer Engineering",
+    "Electronics and Computer Science", "Electronics and Telecommunication Engg", "Fashion Technology",
+    "Fibres and Textile Processing Technology", "Food Engineering and Technology", "Food Technology",
+    "Food Technology And Management", "Industrial IoT", "Information Technology", "Instrumentation Engineering",
+    "Instrumentation and Control Engineering", "Internet of Things (IoT)", "Logistics",
+    "Man Made Textile Technology", "Manufacturing Science and Engineering", "Mechanical & Automation Engineering",
+    "Mechanical Engineering", "Mechanical Engineering[Sandwich]",
+    "Mechanical and Mechatronics Engineering (Additive Manufacturing)", "Mechatronics Engineering",
+    "Metallurgy and Material Technology", "Mining Engineering", "Oil Fats and Waxes Technology",
+    "Oil Technology", "Oil and Paints Technology", "Oil,Oleochemicals and Surfactants Technology",
+    "Paints Technology", "Paper and Pulp Technology", "Petro Chemical Engineering", "Petro Chemical Technology",
+    "Pharmaceutical and Fine Chemical Technology", "Pharmaceuticals Chemistry and Technology",
+    "Plastic Technology", "Plastic and Polymer Engineering", "Plastic and Polymer Technology",
+    "Polymer Engineering and Technology", "Printing Technology", "Production Engineering",
+    "Production Engineering[Sandwich]", "Robotics and Artificial Intelligence", "Robotics and Automation",
+    "Safety and Fire Engineering", "Structural Engineering", "Surface Coating Technology",
+    "Textile Chemistry", "Textile Engineering / Technology", "Textile Plant Engineering",
+    "Textile Technology", "VLSI"].sort((a, b) => a.localeCompare(b));
+
 const branchClusterMap = {
     "Computer & IT": ["Computer Engineering", "Computer Engineering (Software Engineering)", "Computer Science", "Computer Science and Business Systems", "Computer Science and Design", "Computer Science and Engineering", "Computer Science and Information Technology", "Computer Science and Technology", "Computer Technology", "Information Technology"],
     "AI/ML/DS": ["Artificial Intelligence", "Artificial Intelligence (AI) and Data Science", "Artificial Intelligence and Data Science", "Artificial Intelligence and Machine Learning", "Computer Science and Engineering (Artificial Intelligence and Data Science)", "Computer Science and Engineering (Artificial Intelligence)", "Computer Science and Engineering(Artificial Intelligence and Machine Learning)", "Computer Science and Engineering(Data Science)", "Data Engineering", "Data Science", "Robotics and Artificial Intelligence"],
     "Cybersecurity & IoT": ["Computer Science and Engineering (Cyber Security)", "Computer Science and Engineering (Internet of Things and Cyber Security Including Block Chain Technology)", "Computer Science and Engineering (IoT)", "Computer Science and Engineering(Cyber Security)", "Cyber Security", "Industrial IoT", "Internet of Things (IoT)"],
     "Electronics & TeleComm": ["5G", "Electrical and Computer Engineering", "Electrical and Electronics Engineering", "Electronics Engineering", "Electronics Engineering ( VLSI Design and Technology)", "Electronics and Communication (Advanced Communication Technology)", "Electronics and Communication Engineering", "Electronics and Communication(Advanced Communication Technology)", "Electronics and Computer Engineering", "Electronics and Computer Science", "Electronics and Telecommunication Engg", "VLSI"],
     "Electrical": ["Electrical Engg [Electrical and Power]", "Electrical Engg[Electronics and Power]", "Electrical Engineering"],
-    "Mechanical & Automation": ["Automation and Robotics", "Automobile Engineering", "Manufacturing Science and Engineering", "Mechanical & Automation Engineering", "Mechanical Engineering", "Mechanical Engineering[Sandwich]", "Mechanical and Mechatronics Engineering (Additive Manufacturing)", "Mechatronics Engineering", "Production Engineering", "Production Engineering[Sandwich]", "Robotics and Automation"],
+    "Mechanical & Automation": ["Automation and Robotics", "Robotics and Artificial Intelligence", "Automobile Engineering", "Manufacturing Science and Engineering", "Mechanical & Automation Engineering", "Mechanical Engineering", "Mechanical Engineering[Sandwich]", "Mechanical and Mechatronics Engineering (Additive Manufacturing)", "Mechatronics Engineering", "Production Engineering", "Production Engineering[Sandwich]", "Robotics and Automation"],
     "Civil": ["Civil Engineering", "Civil Engineering and Planning", "Civil and Environmental Engineering", "Civil and infrastructure Engineering", "Structural Engineering"],
     "Chemical & Allied": ["Chemical Engineering", "Dyestuff Technology", "Fibres and Textile Processing Technology", "Oil Fats and Waxes Technology", "Oil Technology", "Oil and Paints Technology", "Oil,Oleochemicals and Surfactants Technology", "Paints Technology", "Paper and Pulp Technology", "Petro Chemical Engineering", "Petro Chemical Technology", "Pharmaceutical and Fine Chemical Technology", "Pharmaceuticals Chemistry and Technology", "Plastic Technology", "Plastic and Polymer Engineering", "Plastic and Polymer Technology", "Polymer Engineering and Technology", "Surface Coating Technology", "Textile Chemistry"],
-    "Other Engineering": ["Aeronautical Engineering", "Agricultural Engineering", "Bio Medical Engineering", "Bio Technology", "Electronics and Biomedical Engineering", "Fashion Technology", "Food Engineering and Technology", "Food Technology", "Food Technology And Management", "Instrumentation Engineering", "Instrumentation and Control Engineering", "Logistics", "Man Made Textile Technology", "Metallurgy and Material Technology", "Mining Engineering", "Printing Technology", "Safety and Fire Engineering", "Textile Engineering / Technology", "Textile Plant Engineering", "Textile Technology"]
-}; // Ensure this map is complete
+    "Textile Engineering": [ // Separated Textile
+        "Textile Chemistry",
+        "Man Made Textile Technology",
+        "Textile Engineering / Technology",
+        "Textile Plant Engineering",
+        "Textile Technology",
+        "Fibres and Textile Processing Technology",
+    ],
+    "Aeronautical Engineering": [ // New Cluster
+        "Aeronautical Engineering"
+      ],
+    "Agriculture & Biotechnology": [ // New Cluster
+        "Bio Medical Engineering",
+        "Agricultural Engineering",
+        "Bio Technology",
+        "Electronics and Biomedical Engineering" // Already in Electronics, user can pick one or both clusters
+    ],
+    "Food & Fashion Tech": [ // New Cluster
+        "Fashion Technology",
+        "Food Engineering and Technology",
+        "Food Technology",
+        "Food Technology And Management"
+    ],
+    "Instrumentation & Control": [ // New Cluster
+        "Instrumentation Engineering",
+        "Instrumentation and Control Engineering"
+    ],
+    "Materials & Mining": [ // New Cluster
+        "Metallurgy and Material Technology",
+        "Mining Engineering"
+    ],
+    "Industrial & Other Specialized": [ // New Cluster for remaining
+        "Logistics",
+        "Printing Technology",
+        "Safety and Fire Engineering"
+    ]}; // Ensure this map is complete
 const clusterNames = Object.keys(branchClusterMap);
 
 // --- MultiSelect Component (Keep as is) ---
