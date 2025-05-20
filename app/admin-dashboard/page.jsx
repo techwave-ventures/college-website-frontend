@@ -25,7 +25,7 @@ import { Loader2 } from "lucide-react"; // Import Loader2 for loading indicator
 // import { Separator } from "@/components/ui/separator"; // For visual separation
 
 // Define the API base URL for your backend
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://college-website-backend-main.onrender.com/apiv1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "https://college-website-backend-main-z0vm.onrender.com/apiv1";
 const LOGIN_URL = '/auth/login';
 const UNAUTHORIZED_REDIRECT_URL = '/'; // Where non-admins are sent
 

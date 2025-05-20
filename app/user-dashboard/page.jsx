@@ -80,7 +80,7 @@
 //     const [error, setError] = useState(null);
 //     const router = useRouter();
 
-//     const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main.onrender.com";
+//     const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main-z0vm.onrender.com";
 
 //     useEffect(() => {
 //         const fetchDashboardData = async () => {
@@ -325,7 +325,7 @@ export default function UserDashboard() {
     const router = useRouter();
     const [isCounselingDialogOpen, setIsCounselingDialogOpen] = useState(false);
 
-    const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main.onrender.com";
+    const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main-z0vm.onrender.com";
 
     useEffect(() => {
         const fetchDashboardData = async () => {

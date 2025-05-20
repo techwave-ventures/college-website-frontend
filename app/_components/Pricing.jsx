@@ -97,7 +97,7 @@ export default function Pricing() {
     const [isLoadingUser, setIsLoadingUser] = useState(true);
     const [isProcessingPayment, setIsProcessingPayment] = useState(null);
 
-    const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main.onrender.com";
+    const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main-z0vm.onrender.com";
 
     // Load Razorpay Script
     useEffect(() => {

@@ -23,7 +23,7 @@ import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 
 // Define the backend endpoint URL for initiating payment
-const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://college-website-backend-main.onrender.com';
+const backend_url = process.env.NEXT_PUBLIC_BACKEND_URL || 'https://college-website-backend-main-z0vm.onrender.com';
 const PAYMENT_ENDPOINT_PATH = "/apiv1/register-and-pay";
 
 const casteCategories = [ "General", "OBC", "SC", "ST", "VJ/NT", "SBC", "EWS", "Other" ];

@@ -35,7 +35,7 @@ const SignupPage = () => {
 
   // Define Backend API URL using environment variable
   // Ensure NEXT_PUBLIC_API_URL is set in your .env.local file
-  const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main.onrender.com"; // Fallback for local dev
+  const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main-z0vm.onrender.com"; // Fallback for local dev
 
   // Handle input changes
   const handleChange = (e) => {
