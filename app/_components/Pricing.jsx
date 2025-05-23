@@ -1,4 +1,4 @@
-// components/Pricing.jsx (or your path)
+// components/Pricing.jsx
 "use client";
 
 import React, { useState, useEffect } from 'react';
@@ -7,12 +7,10 @@ import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Check, Loader2, Lock } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-// Define plan data
 const pricingPlans = [
-    // Starter Plan...
     {
         id: "starter",
         name: "Starter Pack",
@@ -23,17 +21,17 @@ const pricingPlans = [
         description: "Begin your journey with essential tools.",
         features: [
             "College Preference List Generator (3 Uses)",
-            "Access to our MHTCET whatsapp community",
+            "Access to our MHTCET WhatsApp community",
             "Essential Counselling Process Guide",
             "Category-Specific Document Checklist",
             "Previous Year MHT-CET Cutoffs",
             "Latest MHT-CET Updates",
         ],
-        buttonText: "Select Free Plan",
+        buttonText: "Get Started Free",
         bgColor: "bg-white", textColor: "text-gray-900", buttonBgColor: "bg-black hover:bg-gray-800",
         buttonTextColor: "text-white", buttonVariant: "default", badge: null, checkColor: "text-green-600",
+        collegeListLimit: 3
     },
-    // Guidance Pro Plan...
     {
         id: "pro",
         name: "Guidance Pro",
@@ -47,7 +45,8 @@ const pricingPlans = [
             "Advanced College Preference List Generator (5 Uses)",
             "Personalized College Preference List [Expert-Curated]",
             "Expert-Curated Document Checklist",
-            "Step by Step Guidance at every stage (Document verification, Registration, Form Filling, Freeze/Float/Betterment)",
+            "Step by Step Guidance at every stage",
+            "Spot Round / Donation Admission Guidance",
             "Dedicated Group Support (WhatsApp)",
             "Guided Form Filling Assistance",
             "Exclusive Guidance Pro Community Access",
@@ -56,50 +55,28 @@ const pricingPlans = [
         bgColor: "bg-gray-800", textColor: "text-white", buttonBgColor: "bg-white hover:bg-gray-200",
         buttonTextColor: "text-gray-800", buttonVariant: "secondary", badge: "Most Popular",
         badgeStyle: "bg-white text-black", checkColor: "text-green-400",
-    },
-    // Admission Accelerator Plan...
-    {
-        id: "accelerator",
-        name: "Admission Accelerator",
-        originalPrice: "₹ 3199",
-        price: "₹1599",
-        amount: 159900,
-        priceSuffix: "/ One-Time",
-        description: "Comprehensive support for guaranteed results.",
-        features: [
-            "All Guidance Pro Features",
-            "Priority WhatsApp Support (Fast Response)",
-            "Exclusive Admission Accelerator Community Access",
-            "In-Depth 1-on-1 Expert Counselling",
-            "Expert-Curated Personalised College Preference List",
-            "Dedicated 1-on-1 Form Filling Support",
-            "Spot Round / Donation Admission Guidance",
-            "Unlimited College List Generator Access",
-        ],
-        buttonText: "Accelerate Admission",
-        bgColor: "bg-white", textColor: "text-gray-900", buttonBgColor: "bg-black hover:bg-gray-800",
-        buttonTextColor: "text-white", buttonVariant: "default", badge: null, checkColor: "text-green-600",
-    },
+        collegeListLimit: 5
+    }
 ];
 
-// --- Define Plan Hierarchy ---
-const planOrder = {
-    starter: 0,
-    pro: 1,
-    accelerator: 2
-};
-// --- End Plan Hierarchy ---
-
+const planOrder = { 'free': -1, 'starter': 0, 'pro': 1};
 
 export default function Pricing() {
     const router = useRouter();
-    const [user, setUser] = useState(null);
-    const [isLoadingUser, setIsLoadingUser] = useState(true);
-    const [isProcessingPayment, setIsProcessingPayment] = useState(null);
-
+    const [userData, setUserData] = useState(null);
+    const [planData, setPlanData] = useState(null);
+    const [isProcessing, setIsProcessing] = useState(null);
+    const [isLoadingData, setIsLoadingData] = useState(true);
+    const [usageData, setUsageData] = useState({  collegeListGenerationLimit: 0, collegeListGenerationsUsed: 0  });
     const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main-z0vm.onrender.com";
 
-    // Load Razorpay Script
+    // Derived state values
+    const currentPlanId = planData?.id || 'free';
+    const currentPlanLevel = planOrder[currentPlanId] ?? planOrder.free;
+    const paymentStatus = planData?.status;
+    const isAuthenticated = !!userData;
+
+    // Razorpay script loading
     useEffect(() => {
         const script = document.createElement('script');
         script.src = 'https://checkout.razorpay.com/v1/checkout.js';
@@ -111,197 +88,141 @@ export default function Pricing() {
         };
     }, []);
 
-    // Fetch user status
+    // Fetch user data
     useEffect(() => {
-        const fetchUserStatus = async () => {
-            setIsLoadingUser(true);
-            const profileUrl = `${baseApiUrl}/apiv1/users/getUserProfile`;
-            console.log("Pricing: Attempting to fetch user status from:", profileUrl);
+        const fetchData = async () => {
             try {
-                const response = await axios.get(profileUrl, { withCredentials: true });
-                console.log("Pricing: Received response from profile URL:", response.data);
-                if (response.data?.success && response.data?.user) {
-                    setUser(response.data.user);
-                    console.log("Pricing: User authenticated:", response.data.user);
-                } else {
-                    setUser(null);
-                    console.log("Pricing: User not authenticated or response format incorrect.");
+                const res = await axios.get(`${baseApiUrl}/apiv1/users/me/plan-status`, { 
+                    withCredentials: true 
+                });
+                if (res.data?.success) {
+                    setUserData(res.data.user);
+                    setPlanData(res.data.plan);
+                    setUsageData(res.data.usage || { collegeListGenerationLimit: 0,collegeListGenerationsUsed: 0 });
+                    console.log(res.data.usage);
                 }
             } catch (error) {
-                console.error("Pricing: Failed to fetch user status.", error.response?.data || error.message);
-                setUser(null);
+                toast.error("Failed to load user data");
             } finally {
-                setIsLoadingUser(false);
+                setIsLoadingData(false);
             }
         };
-        fetchUserStatus();
+        fetchData();
     }, [baseApiUrl]);
 
-
-    // Handle Plan Selection
-    const handleSelectPlan = async (selectedPlan) => { // Removed type annotation from selectedPlan
-        if (isLoadingUser) {
-            toast.loading("Checking authentication...");
-            return;
-        }
-
-        const isAuthenticated = !!user;
-
-        if (!isAuthenticated) {
-            toast.error("Please log in or sign up to select a plan.");
+    const handlePayment = async (type, planId = null) => {
+        if (!userData) {
             router.push('/auth/login?redirect=/pricing');
-            return;
+            return toast.error("Please login first");
         }
 
-        // --- Upgrade Logic ---
-        const currentUserPlanId = user.counselingPlan || 'starter';
-        const currentUserPlanLevel = planOrder[currentUserPlanId] ?? -1;
-        const selectedPlanLevel = planOrder[selectedPlan.id];
-
-        if (selectedPlan.amount === 0) {
-             if (currentUserPlanLevel <= 0) {
-                toast.success(`You have selected the ${selectedPlan.name}.`);
-                // Optional: Backend call to set plan to 'starter'
-             } else {
-                 toast("You are already on a higher plan.", { icon: 'ℹ️' });
-             }
-            return;
-        }
-
-        if (selectedPlanLevel <= currentUserPlanLevel) {
-            toast.error("You can only upgrade to a higher plan.");
-            return;
-        }
-        // --- End Upgrade Logic ---
-
-        setIsProcessingPayment(selectedPlan.id);
-        const loadingToastId = toast.loading(`Initiating payment for ${selectedPlan.name}...`);
-        const paymentInitiateUrl = `${baseApiUrl}/apiv1/payments/initiate-plan`;
+        setIsProcessing(type);
+        const loadingToast = toast.loading("Initializing payment...");
 
         try {
-            const orderResponse = await axios.post(paymentInitiateUrl,
-                { planId: selectedPlan.id },
+            const endpoint = type === 'plan' 
+                ? `${baseApiUrl}/apiv1/payments/initiate-plan` 
+                : `${baseApiUrl}/apiv1/payments/buy-limit`;
+            
+            const { data } = await axios.post(
+                endpoint,
+                type === 'plan' ? { planId } : { amount: 10000 },
                 { withCredentials: true }
             );
-            const orderResult = orderResponse.data;
 
-            if (!orderResult.success || !orderResult.order_id) {
-                throw new Error(orderResult.message || 'Failed to create payment order.');
-            }
+            if (!data.order_id) throw new Error("Payment initialization failed");
 
-            console.log("Razorpay Order Created:", orderResult);
-
-            const razorpayOptions = {
-                key: orderResult.key_id,
-                amount: orderResult.amount,
-                currency: orderResult.currency,
+            const options = {
+                key: data.key_id,
+                amount: data.amount,
+                currency: data.currency,
                 name: "Campus Sathi",
-                description: `Payment for ${orderResult.planName || selectedPlan.name}`,
-                order_id: orderResult.order_id,
-                handler: async function (response) { // Removed type annotation from response
-                    console.log("Razorpay Success Response:", response);
-                    const verifyUrl = `${baseApiUrl}/apiv1/payments/verify-razorpay`;
-                    const verificationToastId = toast.loading("Verifying payment...");
+                description: data.description,
+                order_id: data.order_id,
+                handler: async (response) => {
                     try {
-                        const verifyRes = await axios.post(verifyUrl, {
-                            razorpay_order_id: response.razorpay_order_id,
-                            razorpay_payment_id: response.razorpay_payment_id,
-                            razorpay_signature: response.razorpay_signature,
-                        }, { withCredentials: true });
+                        const verifyRes = await axios.post(
+                            `${baseApiUrl}/apiv1/payments/verify-razorpay`,
+                            response,
+                            { withCredentials: true }
+                        );
 
                         if (verifyRes.data.success) {
-                            toast.success("Payment Verified! Plan activated.", { id: verificationToastId });
-                            const updatedUserResponse = await axios.get(`${baseApiUrl}/apiv1/users/getUserProfile`, { withCredentials: true });
-                            if (updatedUserResponse.data?.success && updatedUserResponse.data?.user) {
-                                setUser(updatedUserResponse.data.user);
+                            toast.success("Payment verified! Limits updated");
+                            setUsageData(prev => ({
+                                ...prev,
+                                collegeListGenerationLimit: verifyRes.data.newLimit
+                            }));
+                            if (type === 'plan') {
+                                setPlanData(verifyRes.data.plan);
+                                router.push('/user-dashboard');
                             }
-                            router.push('/payment-status?status=success');
-                        } else {
-                            throw new Error(verifyRes.data.message || "Payment verification failed.");
                         }
-                    } catch (verifyError) { // Removed type annotation from verifyError
-                        console.error("Payment Verification Failed:", verifyError);
-                        const errorMsg = verifyError.response?.data?.message || verifyError.message || 'Payment verification failed.';
-                        toast.error(`Error: ${errorMsg}`, { id: verificationToastId });
-                        router.push('/payment-status?status=failure');
+                    } catch (error) {
+                        toast.error("Payment verification failed");
                     }
                 },
-                prefill: orderResult.prefill || {},
-                notes: orderResult.notes || {},
-                theme: orderResult.theme || { color: '#4f46e5' },
-                modal: {
-                    ondismiss: function() {
-                        console.log('Razorpay checkout modal dismissed.');
-                        toast.error('Payment process cancelled.');
-                        setIsProcessingPayment(null);
-                    }
-                },
+                prefill: data.prefill,
+                theme: { color: "#2563eb" },
+                modal: { ondismiss: () => {
+                    toast.error('Payment cancelled');
+                    setIsProcessing(null);
+                }}
             };
 
-            if (!window.Razorpay) {
-                toast.error("Payment gateway script not loaded. Please refresh.", { id: loadingToastId });
-                setIsProcessingPayment(null);
-                return;
-            }
-
-            const rzp = new window.Razorpay(razorpayOptions);
-            rzp.on('payment.failed', function (response){ // Removed type annotation from response
-                 console.error("Razorpay Payment Failed Event:", response.error);
-                 const reason = response.error?.reason || 'Unknown error';
-                 const description = response.error?.description || 'Payment could not be completed.';
-                 toast.error(`Payment Failed: ${description} (Reason: ${reason})`);
-                 router.push('/payment-status?status=failure');
+            const rzp = new window.Razorpay(options);
+            rzp.on('payment.failed', (response) => {
+                toast.error(`Payment failed: ${response.error.description}`);
+                setIsProcessing(null);
             });
-
             rzp.open();
-            toast.dismiss(loadingToastId);
-
-        } catch (error) { // Removed type annotation from error
-            console.error("Payment Initiation Failed:", error);
-            const errorMessage = error.response?.data?.message || error.message || 'Could not initiate payment.';
-            toast.error(`Error: ${errorMessage}`, { id: loadingToastId });
-            setIsProcessingPayment(null);
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Payment initialization failed");
+        } finally {
+            toast.dismiss(loadingToast);
+            setIsProcessing(null);
         }
     };
 
-    // Determine current user plan level for disabling buttons
-    const currentUserPlanLevel = React.useMemo(() => { // Use React.useMemo if not importing useMemo directly
-        if (!user || !user.counselingPlan) return planOrder.starter;
-        return planOrder[user.counselingPlan] ?? planOrder.starter;
-    }, [user]);
-
     return (
-        <section className="bg-gradient-to-b from-gray-100 to-gray-200 py-16 md:py-24 px-4 sm:px-6 lg:px-8">
+        <section className="bg-gradient-to-b from-gray-100 to-gray-200 py-16 md:py-8 px-4 sm:px-6 lg:px-8">
             <Toaster position="top-right" />
             <div className="container mx-auto text-center">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">
-                    Unlock Your Admission Success
-                </h2>
-                <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
-                    Choose the perfect plan to navigate your college admission journey with confidence and expert support.
-                </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch">
+                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gray-800">Unlock Your Admission Success</h2>
+                <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">Choose the perfect plan to navigate your college admission journey with confidence and expert support.</p>
+
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch justify-center max-w-4xl mx-auto">
                     {pricingPlans.map((plan) => {
-                        const planLevel = planOrder[plan.id];
-                        const isAuthenticated = !!user; // Check auth status inside map if needed
-                        const isDowngradeOrSame = isAuthenticated && planLevel <= currentUserPlanLevel;
-                        const disableButton = isLoadingUser ||
-                                              isProcessingPayment === plan.id ||
-                                              (isAuthenticated && plan.amount > 0 && isDowngradeOrSame);
-
+                        const isCurrentPlan = plan.id === currentPlanId;
+                        const isPaidPlan = plan.amount > 0;
+                        const isPlanCompleted = paymentStatus === 'Completed';
+                        
                         let buttonText = plan.buttonText;
-                        if (isAuthenticated && plan.id === user?.counselingPlan) {
-                            buttonText = "Current Plan";
-                        } else if (disableButton && plan.amount > 0) {
-                             buttonText = "Upgrade Unavailable";
+                        let isDisabled = isLoadingData || isProcessing === plan.id;
+
+                        // Button state logic
+                        if (isCurrentPlan) {
+                            buttonText = isPlanCompleted ? "Current Plan" : "Complete Payment";
+                            isDisabled = isPlanCompleted;
+                        } else if (isPaidPlan || isPlanCompleted) {
+                            if (planOrder[plan.id] <= currentPlanLevel && isPlanCompleted) {
+                                buttonText = "Already Upgraded";
+                                isDisabled = true;
+                            }
+                        }
+
+                        if (!isAuthenticated && isPaidPlan) {
+                            isDisabled = true;
+                            buttonText = "Login to Purchase";
                         }
 
                         return (
                             <Card
                                 key={plan.id}
                                 className={cn(
-                                    "flex flex-col rounded-xl shadow-lg overflow-hidden border transition-all duration-300 hover:shadow-2xl",
+                                    "flex flex-col rounded-xl shadow-lg overflow-hidden border transition-all duration-300 hover:shadow-2xl relative",
                                     plan.bgColor,
                                     plan.textColor,
                                     plan.badge ? "ring-2 ring-offset-2 ring-indigo-500" : "border-gray-200"
@@ -309,27 +230,36 @@ export default function Pricing() {
                             >
                                 {plan.badge && (
                                     <div className={cn(
-                                        "absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2 px-3 py-1 text-sm font-semibold rounded-full shadow-md",
-                                        plan.badgeStyle || "bg-indigo-600 text-white"
+                                        "absolute top-4 right-2 mr-1 transform", // Changed positioning
+                                        "px-3 py-1 text-sm font-semibold rounded-full shadow-md",
+                                        plan.badgeStyle
                                     )}>
                                         {plan.badge}
                                     </div>
                                 )}
-                                <CardHeader className="p-6 text-center">
+
+                                <CardHeader className="p-2 text-center">
                                     <CardTitle className="text-2xl font-bold">{plan.name}</CardTitle>
-                                    <CardDescription className={cn("mt-2 text-sm", plan.badge ? 'text-gray-300' : 'text-gray-500')}>
+                                    <CardDescription className={cn("mt-1 text-sm", plan.badge ? 'text-gray-300' : 'text-gray-500')}>
                                         {plan.description}
                                     </CardDescription>
                                 </CardHeader>
 
-                                <CardContent className="flex-grow p-6 space-y-3">
+                                <CardContent className="flex-grow p-4 space-y-1">
                                     <div className="mb-6 text-center">
-                                        {plan.originalPrice && ( <p className={cn("text-sm line-through", plan.badge ? 'text-gray-400' : 'text-gray-500')}>{plan.originalPrice}</p> )}
+                                        {plan.originalPrice && (
+                                            <p className={cn("text-sm line-through", plan.badge ? 'text-gray-400' : 'text-gray-500')}>
+                                                {plan.originalPrice}
+                                            </p>
+                                        )}
                                         <p className={cn("text-4xl font-extrabold", plan.badge ? 'text-white' : 'text-gray-900')}>
                                             {plan.price}
-                                            <span className={cn("text-base font-medium ml-1", plan.badge ? 'text-gray-300' : 'text-gray-500')}>{plan.priceSuffix}</span>
+                                            <span className={cn("text-base font-medium ml-1", plan.badge ? 'text-gray-300' : 'text-gray-500')}>
+                                                {plan.priceSuffix}
+                                            </span>
                                         </p>
                                     </div>
+
                                     <ul className={cn("text-left space-y-2.5", plan.badge ? 'text-gray-200' : 'text-gray-700')}>
                                         {plan.features.map((feature, i) => (
                                             <li key={i} className="flex items-start gap-3 text-sm">
@@ -340,21 +270,19 @@ export default function Pricing() {
                                     </ul>
                                 </CardContent>
 
-                                <CardFooter className="p-6 mt-auto">
+                                <CardFooter className="p-2 mt-auto justify-center">
                                     <Button
                                         size="lg"
                                         variant={plan.buttonVariant}
                                         className={cn(
-                                            `w-full rounded-lg font-semibold py-3 ${plan.buttonBgColor} ${plan.buttonTextColor}`,
-                                            disableButton && "opacity-50 cursor-not-allowed hover:opacity-50"
+                                            `w-3/4 rounded-lg font-semibold py-3 ${plan.buttonBgColor} ${plan.buttonTextColor}`,
+                                            isDisabled && "opacity-50 cursor-not-allowed"
                                         )}
-                                        onClick={() => handleSelectPlan(plan)}
-                                        disabled={disableButton || isProcessingPayment === plan.id}
+                                        onClick={() => handlePayment('plan', plan.id)}
+                                        disabled={isDisabled}
                                     >
-                                        {isProcessingPayment === plan.id ? (
-                                            <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing... </>
-                                        ) : isLoadingUser && plan.amount > 0 ? (
-                                            <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading... </>
+                                        {isProcessing === plan.id ? (
+                                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
                                         ) : (
                                             buttonText
                                         )}
@@ -363,6 +291,31 @@ export default function Pricing() {
                             </Card>
                         );
                     })}
+                    </div>
+                </div>
+
+                <div className="mb-4 mt-4">
+                    <h2 className="text-3xl md:text-2xl font-bold mb-4 text-gray-800">
+                        {isLoadingData ? (
+                            <Loader2 className="h-8 w-8 animate-spin inline" />
+                        ) : (
+                            `College List Generations Left: ${
+                                (typeof usageData.collegeListGenerationLimit === 'number' && 
+                                typeof usageData.collegeListGenerationsUsed === 'number') 
+                                ? usageData.collegeListGenerationLimit - usageData.collegeListGenerationsUsed
+                                : 0
+                            }`
+                        )}
+                    </h2>
+                    <Button 
+                        onClick={() => handlePayment('limit')}
+                        disabled={isProcessing === 'limit' || isLoadingData}
+                        className="bg-gray-600 hover:bg-gray-800 text-white"
+                    >
+                        {isProcessing === 'limit' ? (
+                            <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
+                        ) : "Buy Additional Limit (₹100)"}
+                    </Button>
                 </div>
             </div>
         </section>
