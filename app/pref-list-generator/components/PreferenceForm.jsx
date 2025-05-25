@@ -22,6 +22,7 @@ const categoriesList = ['General', 'OBC', 'EWS', 'VJ', 'NT', 'DT', 'SC', 'ST', '
 // This is the complete list of all unique branches.
 const allBranchesList = [
     "5G", "Aeronautical Engineering", "Agricultural Engineering", "Artificial Intelligence",
+    "Architectural Assistantship", "Technical Textiles",
     "Artificial Intelligence (AI) and Data Science", "Artificial Intelligence and Data Science",
     "Artificial Intelligence and Machine Learning", "Automation and Robotics", "Automobile Engineering",
     "Bio Medical Engineering", "Bio Technology", "Chemical Engineering", "Civil Engineering",
@@ -67,7 +68,7 @@ const branchClusterMap = {
     "Electronics & TeleComm": ["5G", "Electrical and Computer Engineering", "Electrical and Electronics Engineering", "Electronics Engineering", "Electronics Engineering ( VLSI Design and Technology)", "Electronics and Communication (Advanced Communication Technology)", "Electronics and Communication Engineering", "Electronics and Communication(Advanced Communication Technology)", "Electronics and Computer Engineering", "Electronics and Computer Science", "Electronics and Telecommunication Engg", "VLSI"],
     "Electrical": ["Electrical Engg [Electrical and Power]", "Electrical Engg[Electronics and Power]", "Electrical Engineering"],
     "Mechanical & Automation": ["Automation and Robotics", "Robotics and Artificial Intelligence", "Automobile Engineering", "Manufacturing Science and Engineering", "Mechanical & Automation Engineering", "Mechanical Engineering", "Mechanical Engineering[Sandwich]", "Mechanical and Mechatronics Engineering (Additive Manufacturing)", "Mechatronics Engineering", "Production Engineering", "Production Engineering[Sandwich]", "Robotics and Automation"],
-    "Civil": ["Civil Engineering", "Civil Engineering and Planning", "Civil and Environmental Engineering", "Civil and infrastructure Engineering", "Structural Engineering"],
+    "Civil": ["Civil Engineering", "Architectural Assistantship", "Civil Engineering and Planning", "Civil and Environmental Engineering", "Civil and infrastructure Engineering", "Structural Engineering"],
     "Chemical & Allied": ["Chemical Engineering", "Dyestuff Technology", "Fibres and Textile Processing Technology", "Oil Fats and Waxes Technology", "Oil Technology", "Oil and Paints Technology", "Oil,Oleochemicals and Surfactants Technology", "Paints Technology", "Paper and Pulp Technology", "Petro Chemical Engineering", "Petro Chemical Technology", "Pharmaceutical and Fine Chemical Technology", "Pharmaceuticals Chemistry and Technology", "Plastic Technology", "Plastic and Polymer Engineering", "Plastic and Polymer Technology", "Polymer Engineering and Technology", "Surface Coating Technology", "Textile Chemistry"],
     "Textile Engineering": [ // Separated Textile
         "Textile Chemistry",
@@ -76,6 +77,7 @@ const branchClusterMap = {
         "Textile Plant Engineering",
         "Textile Technology",
         "Fibres and Textile Processing Technology",
+        "Technical Textiles"
     ],
     "Aeronautical Engineering": [ // New Cluster
         "Aeronautical Engineering"
