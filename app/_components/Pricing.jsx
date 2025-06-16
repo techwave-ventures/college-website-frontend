@@ -14,9 +14,9 @@ const pricingPlans = [
     {
         id: "starter",
         name: "Starter Pack",
-        originalPrice: "₹ 299",
-        price: "₹0",
-        amount: 0,
+        originalPrice: "₹ 499",
+        price: "₹299",
+        amount: 29900,
         priceSuffix: "/ One Time",
         description: "Begin your journey with essential tools.",
         features: [
@@ -27,7 +27,7 @@ const pricingPlans = [
             "Previous Year MHT-CET Cutoffs",
             "Latest MHT-CET Updates",
         ],
-        buttonText: "Get Started Free",
+        buttonText: "Get Starter Pack",
         bgColor: "bg-white", textColor: "text-gray-900", buttonBgColor: "bg-black hover:bg-gray-800",
         buttonTextColor: "text-white", buttonVariant: "default", badge: null, checkColor: "text-green-600",
         collegeListLimit: 3
@@ -42,14 +42,12 @@ const pricingPlans = [
         description: "Personalized guidance to boost your chances.",
         features: [
             "All Starter Pack Features",
-            "Advanced College Preference List Generator (5 Uses)",
-            "Personalized College Preference List [Expert-Curated]",
-            "Expert-Curated Document Checklist",
+            "One on One Counselling",
             "Step by Step Guidance at every stage",
-            "Spot Round / Donation Admission Guidance",
-            "Dedicated Group Support (WhatsApp)",
-            "Guided Form Filling Assistance",
-            "Exclusive Guidance Pro Community Access",
+            "Freeze / Float / Betterment Guidance",
+            "College Preference List Generator (5 Uses)",
+            "Expert-Curated College List",
+            "Management / Spot Round Admission Guidance",
         ],
         buttonText: "Get Guidance Pro",
         bgColor: "bg-gray-800", textColor: "text-white", buttonBgColor: "bg-white hover:bg-gray-200",
@@ -294,7 +292,7 @@ export default function Pricing() {
                     </div>
                 </div>
 
-                <div className="mb-4 mt-4">
+                {/* <div className="mb-4 mt-4">
                     <h2 className="text-3xl md:text-2xl font-bold mb-4 text-gray-800">
                         {isLoadingData ? (
                             <Loader2 className="h-8 w-8 animate-spin inline" />
@@ -315,8 +313,8 @@ export default function Pricing() {
                         {isProcessing === 'limit' ? (
                             <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...</>
                         ) : "Buy Additional Limit (₹100)"}
-                    </Button>
-                </div>
+                    </Button> */}
+                {/* </div> */}
             </div>
         </section>
     );
