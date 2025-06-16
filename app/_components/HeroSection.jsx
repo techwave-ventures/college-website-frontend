@@ -25,7 +25,7 @@ export default function HeroSection() {
   return (
     // Increased horizontal padding (px-6 sm:px-12 lg:px-20) for centering effect
     // Reduced vertical padding (py-12 md:py-16 lg:py-20) for compactness
-    <section className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 px-6 sm:px-12 lg:px-20 py-12 md:py-16 lg:py-20 items-center">
+    <section className="container pt-20 mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 lg:gap-16 px-6 sm:px-12 lg:px-20 py-12 md:py-16 lg:py-20 items-center">
 
       {/* Left Side: Text Content */}
       <div className="flex flex-col justify-center text-center md:text-left">
