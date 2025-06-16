@@ -454,13 +454,7 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
             </form>
 
             <div className="w-full aspect-video rounded-lg overflow-hidden shadow-md mt-8 md:mt-0 self-center">
-            <iframe
-                className="w-full h-full"
-                src="https://www.youtube.com/live/sXwfw7ZlWHM?si=72fTlZVxkPt9r2WU?rel=0"
-                title="How to use Preference Generator"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-            />
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/sXwfw7ZlWHM?si=lbp_5S4kWCKeV1z-&amp;controls=0" title="MHT-CET College Preference List Generator" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
     </div>
   );
