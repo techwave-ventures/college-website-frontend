@@ -372,83 +372,96 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Percentile Input */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <Label htmlFor="percentile" className={cn("font-semibold", isLoading && "text-gray-400")}>MHT-CET Percentile*</Label>
-          <Input
-            id="percentile" type="number" name="percentile" min="0" max="100" step="any"
-            value={formData.percentile} onChange={(e) => handleValueChange('percentile', e.target.value)}
-            placeholder="e.g., 95.67" required disabled={isLoading || isLoadingUser} // Disable if loading anything
-            className="border-gray-300 focus:border-black focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed"
-          />
-        </div>
-        {/* Category Select */}
-        <div className="space-y-2">
-          <Label htmlFor="category" className={cn("font-semibold", isLoading && "text-gray-400")}>Category*</Label>
-          <Select name="category" value={formData.category} onValueChange={(value) => handleValueChange('category', value)} disabled={isLoading || isLoadingUser}>
-            <SelectTrigger id="category" className="w-full border-gray-300 focus:border-black focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed">
-              <SelectValue placeholder="Select your category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categoriesList.map((cat) => (<SelectItem key={cat} value={cat}>{cat}</SelectItem>))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
 
-      {/* Cluster MultiSelect */}
-      <MultiSelect
-        label="Select Branch Clusters [Optional]"
-        placeholder="Select clusters..."
-        options={clusterNames}
-        selectedValues={formData.selectedClusters}
-        onSelectionChange={handleMultiSelectionChange}
-        name="selectedClusters"
-        disabled={isLoading || isLoadingUser}
-      />
+            <form onSubmit={handleSubmit} className="space-y-2">
+            {/* Percentile Input */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                <Label htmlFor="percentile" className={cn("font-semibold", isLoading && "text-gray-400")}>MHT-CET Percentile*</Label>
+                <Input
+                    id="percentile" type="number" name="percentile" min="0" max="100" step="any"
+                    value={formData.percentile} onChange={(e) => handleValueChange('percentile', e.target.value)}
+                    placeholder="e.g., 95.67" required disabled={isLoading || isLoadingUser} // Disable if loading anything
+                    className="border-gray-300 focus:border-black focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed"
+                />
+                </div>
+                {/* Category Select */}
+                <div className="space-y-2">
+                <Label htmlFor="category" className={cn("font-semibold", isLoading && "text-gray-400")}>Category*</Label>
+                <Select name="category" value={formData.category} onValueChange={(value) => handleValueChange('category', value)} disabled={isLoading || isLoadingUser}>
+                    <SelectTrigger id="category" className="w-full border-gray-300 focus:border-black focus:ring-black disabled:opacity-50 disabled:cursor-not-allowed">
+                    <SelectValue placeholder="Select your category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                    {categoriesList.map((cat) => (<SelectItem key={cat} value={cat}>{cat}</SelectItem>))}
+                    </SelectContent>
+                </Select>
+                </div>
+            </div>
 
-      {/* Individual Branches MultiSelect */}
-      <MultiSelect
-        label="Select Individual Branches"
-        placeholder="Select specific branches..."
-        options={allBranchesList}
-        selectedValues={formData.selectedIndividualBranches}
-        onSelectionChange={handleMultiSelectionChange}
-        name="selectedIndividualBranches"
-        disabled={isLoading || isLoadingUser}
-      />
+            {/* Cluster MultiSelect */}
+            <MultiSelect
+                label="Select Branch Clusters [Optional]"
+                placeholder="Select clusters..."
+                options={clusterNames}
+                selectedValues={formData.selectedClusters}
+                onSelectionChange={handleMultiSelectionChange}
+                name="selectedClusters"
+                disabled={isLoading || isLoadingUser}
+            />
 
-      {/* Places MultiSelect */}
-      <MultiSelect
-        label="Preferred Places*"
-        placeholder="Select places..."
-        options={placesList}
-        selectedValues={formData.places}
-        onSelectionChange={handleMultiSelectionChange}
-        name="places"
-        disabled={isLoading || isLoadingUser}
-      />
+            {/* Individual Branches MultiSelect */}
+            <MultiSelect
+                label="Select Individual Branches"
+                placeholder="Select specific branches..."
+                options={allBranchesList}
+                selectedValues={formData.selectedIndividualBranches}
+                onSelectionChange={handleMultiSelectionChange}
+                name="selectedIndividualBranches"
+                disabled={isLoading || isLoadingUser}
+            />
 
-      {/* Submit Button */}
-      <div className="pt-4">
-        <Button
-          type="submit"
-          className="w-full md:w-auto bg-black text-white hover:bg-gray-800 px-8 py-3 disabled:opacity-70 disabled:cursor-not-allowed"
-          // Disable button if loading the form submission OR if initially loading user status
-          disabled={isLoading || isLoadingUser}
-        >
-          {/* Show loading state based on form submission or initial user load */}
-          {isLoading ? (
-            <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating... </>
-          ) : isLoadingUser ? (
-             <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Checking Auth... </>
-          ) : (
-            'Generate Preference List'
-          )}
-        </Button>
-      </div>
-    </form>
+            {/* Places MultiSelect */}
+            <MultiSelect
+                label="Preferred Places*"
+                placeholder="Select places..."
+                options={placesList}
+                selectedValues={formData.places}
+                onSelectionChange={handleMultiSelectionChange}
+                name="places"
+                disabled={isLoading || isLoadingUser}
+            />
+
+            {/* Submit Button */}
+            <div className="pt-2">
+                <Button
+                type="submit"
+                className="w-full md:w-auto bg-black text-white hover:bg-gray-800 px-8 py-3 disabled:opacity-70 disabled:cursor-not-allowed"
+                // Disable button if loading the form submission OR if initially loading user status
+                disabled={isLoading || isLoadingUser}
+                >
+                {/* Show loading state based on form submission or initial user load */}
+                {isLoading ? (
+                    <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating... </>
+                ) : isLoadingUser ? (
+                    <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Checking Auth... </>
+                ) : (
+                    'Generate Preference List'
+                )}
+                </Button>
+            </div>
+            </form>
+
+            <div className="w-full aspect-video rounded-lg overflow-hidden shadow-md mt-8 md:mt-0 self-center">
+            <iframe
+                className="w-full h-full"
+                src="https://www.youtube.com/live/sXwfw7ZlWHM?si=72fTlZVxkPt9r2WU?rel=0"
+                title="How to use Preference Generator"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+            />
+            </div>
+    </div>
   );
 }
