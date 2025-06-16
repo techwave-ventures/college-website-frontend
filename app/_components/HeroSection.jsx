@@ -33,7 +33,7 @@ export default function HeroSection() {
           Try Our College Preference List Generator
         </h1>
         <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-          Get a personalized college preference list based on your entrance scores, preferences (Branch, City, etc.) & career goals.
+          Get a personalized college preference list based on your entrance scores, preferences (Category, Branch, City, etc.) & career goals.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
           <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3" onClick={() => router.push('/pref-list-generator')}>
