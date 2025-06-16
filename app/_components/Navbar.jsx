@@ -213,7 +213,7 @@ export default function Navbar() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                    className="cursor-pointer"
-                   onClick={() => router.push(user.accountType === 'Admin' ? '/admin-dashboard' : '/')} // Redirect non-admin to home '/'
+                   onClick={() => router.push(user.accountType === 'Admin' ? '/admin-dashboard' : '/user-dashboard')} // Redirect non-admin to home '/'
                 >
                   <LayoutDashboard className="mr-2 h-4 w-4" />
                   <span>Dashboard</span>
