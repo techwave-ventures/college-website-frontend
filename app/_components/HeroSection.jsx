@@ -10,11 +10,16 @@ import { useRouter } from 'next/navigation'; // Import the hook
 // Placeholder Images - Replace with your actual image paths
 // Using placehold.co for better visual placeholders
 const placeholderImages = [
-    "/images.jpg",
-    "/images.jpg",
-    "/images.jpg",
-    "/images.jpg",
-    "/images.jpg",
+    "/image (1).jpeg",
+    "/image (1).jpg",
+    "/image (2).jpeg",
+    "/image (2).jpg",
+    "/image (3).jpeg",
+    "/image (3).jpg",
+    "/image (4).jpg",
+    "/image (4).jpeg",
+    "/image (5).jpeg",
+    "/image (6).jpeg",
 ];
 
 // Duplicate images array for seamless looping animation
