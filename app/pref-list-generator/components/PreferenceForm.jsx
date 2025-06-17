@@ -218,7 +218,7 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
     // --- End Auth State ---
 
     // Define Backend API URL
-    const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main.onrender.com";
+    const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.campussathi.in";
 
     // --- Fetch user status and plan/usage data on component mount ---
     useEffect(() => {
