@@ -47,7 +47,7 @@ export default function Navbar() {
   // Define Backend API URL using environment variable
   // Ensure NEXT_PUBLIC_API_URL is set in your .env.local file
   // *** Updated fallback port to 5000 based on user's index.js ***
-  const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main-z0vm.onrender.com";
+  const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.campussathi.in";
 
   // Fetch user status on component mount
   useEffect(() => {
