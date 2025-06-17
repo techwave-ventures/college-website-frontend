@@ -500,7 +500,7 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
 
                 {/* Cluster MultiSelect */}
                 <MultiSelect
-                    label="Select Branch Clusters [Optional]"
+                    label="Select Branch Group"
                     placeholder="Select clusters..."
                     options={clusterNames}
                     selectedValues={formData.selectedClusters}
@@ -511,7 +511,7 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
 
                 {/* Individual Branches MultiSelect */}
                 <MultiSelect
-                    label="Select Individual Branches"
+                    label="Select Individual Branches [Optional]"
                     placeholder="Select specific branches..."
                     options={allBranchesList}
                     selectedValues={formData.selectedIndividualBranches}
@@ -562,7 +562,7 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
             </form>
 
             <div className="w-full aspect-video rounded-lg overflow-hidden shadow-md mt-8 md:mt-0 self-center">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/sXwfw7ZlWHM?si=lbp_5S4kWCKeV1z-&controls=0" title="MHT-CET College Preference List Generator" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/S8e6c-7o5Gc?si=hLBytuRGI4mboYD8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
         </div>
     );
