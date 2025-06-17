@@ -66,7 +66,7 @@ export default function Pricing() {
     const [isProcessing, setIsProcessing] = useState(null);
     const [isLoadingData, setIsLoadingData] = useState(true);
     const [usageData, setUsageData] = useState({  collegeListGenerationLimit: 0, collegeListGenerationsUsed: 0  });
-    const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://backend.campussathi.in";
+    const baseApiUrl = process.env.NEXT_PUBLIC_API_URL || "https://college-website-backend-main.onrender.com";
 
     // Derived state values
     const currentPlanId = planData?.id || 'free';
