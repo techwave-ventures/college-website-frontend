@@ -100,7 +100,7 @@ export default function Pricing() {
                     console.log(res.data.usage);
                 }
             } catch (error) {
-                toast.error("Failed to load user data");
+                // toast.error("Failed to load user data");
             } finally {
                 setIsLoadingData(false);
             }
