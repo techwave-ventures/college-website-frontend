@@ -41,11 +41,11 @@ export default function HeroSection() {
           Get a personalized college preference list based on your entrance scores, preferences (Category, Branch, City, etc.) & career goals.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-          <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3" onClick={() => router.push('/pref-list-generator')}>
+          <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3" onClick={() => router.push('/college-list-generator-free')}>
             Try Now
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
-          <Button size="lg" variant="outline" className="px-8 py-3" onClick={() => router.push('/college-predictor')}>
+          <Button size="lg" variant="outline" className="px-8 py-3" onClick={() => router.push('/college-list-generator-free')}>
             Use Free College Predictor
           </Button>
         </div>

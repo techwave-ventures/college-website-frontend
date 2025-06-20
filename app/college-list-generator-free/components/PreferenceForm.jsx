@@ -242,7 +242,7 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
         }
         if (formData.selectedClusters.length === 0 && formData.selectedIndividualBranches.length === 0) {
             // console.log("[PreferenceForm] Validation failed: No branches or clusters selected.");
-            toast.error('Please select at least one branch cluster or individual branch.'); return;
+            toast.error('Please select at least one branch Group or individual branch.'); return;
         }
         if (formData.places.length === 0) {
             // console.log("[PreferenceForm] Validation failed: No places selected.");
@@ -336,7 +336,7 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
                 {/* Cluster MultiSelect */}
                 <MultiSelect
                     label="Select Branch Group"
-                    placeholder="Select clusters..."
+                    placeholder="Select Branch Group..."
                     options={clusterNames}
                     selectedValues={formData.selectedClusters}
                     onSelectionChange={handleMultiSelectionChange}
@@ -383,11 +383,15 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
                 </div>
             </form>
 
-            <div className="w-full h-full flex items-center justify-center rounded-lg overflow-hidden mt-8 md:mt-0">
+            {/* <div className="w-full h-full flex items-center justify-center rounded-lg overflow-hidden mt-8 md:mt-0">
                 <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3" onClick={() => router.push('/pref-list-generator')}>
                     Try Preference List Generator
                     <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
+            </div> */}
+
+            <div className="w-full aspect-video rounded-lg overflow-hidden shadow-md mt-8 md:mt-0 self-center">
+                <iframe width="560" height="315" src="https://www.youtube.com/embed/S8e6c-7o5Gc?si=hLBytuRGI4mboYD8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
         </div>
     );
