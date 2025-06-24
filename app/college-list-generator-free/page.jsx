@@ -24,10 +24,10 @@ export default function PreferenceGeneratorPage() { // Renamed component for cla
           <Card className="shadow-lg">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl md:text-3xl font-bold text-gray-800">
-                MHT CET [PCM] College Predictor
+                Generate Your Personalized College Preference List
               </CardTitle>
               <CardDescription className="text-gray-600 mt-2">
-                This is a free version. Use College Preference List Generator for generating college list for CAP Rounds 
+                Enter your details below to get a tailored list based on your profile. 
               </CardDescription>
             </CardHeader>
             <CardContent className="p-6">
@@ -58,7 +58,7 @@ export default function PreferenceGeneratorPage() { // Renamed component for cla
                 {!isLoading && !error && resultData && (
                   <>
                     <h2 className="text-xl font-semibold mb-4 text-gray-800 border-t pt-6">
-                      Your Predicted Colleges
+                      Your College Preference List
                     </h2>
                     <PreferenceTable data={resultData} />
                   </>
@@ -66,7 +66,7 @@ export default function PreferenceGeneratorPage() { // Renamed component for cla
                  {/* Initial state message */}
                  {!isLoading && !error && !resultData && (
                      <div className="text-center py-10 text-gray-500 bg-gray-50 p-6 rounded-md border border-dashed">
-                         Your predicted colleges will appear here after submitting the form.
+                         Your college preference list will appear here after submitting the form.
                      </div>
                  )}
               </div>

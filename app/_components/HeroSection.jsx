@@ -45,9 +45,9 @@ export default function HeroSection() {
             Try Now
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
-          <Button size="lg" variant="outline" className="px-8 py-3" onClick={() => router.push('/college-list-generator-free')}>
+          {/* <Button size="lg" variant="outline" className="px-8 py-3" onClick={() => router.push('/college-list-generator-free')}>
             Use Free College Predictor
-          </Button>
+          </Button> */}
         </div>
       </div>
 

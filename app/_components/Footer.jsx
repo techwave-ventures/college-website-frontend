@@ -36,7 +36,8 @@ export default function Footer() {
         <nav className="space-y-2">
           <h6 className="font-semibold text-lg mb-3 text-white uppercase tracking-wider">Imp Pages</h6>
           <Link href="/" className="block hover:text-white hover:underline transition duration-300">Home</Link>
-          <Link href="/pref-list-generator" className="block hover:text-white hover:underline transition duration-300">Preference List Generator</Link>
+          {/* <Link href="/pref-list-generator" className="block hover:text-white hover:underline transition duration-300">Preference List Generator</Link> */}
+          <Link href="/college-list-generator-free" className="block hover:text-white hover:underline transition duration-300">Preference List Generator</Link>
           <Link href="/ExploreColleges" className="block hover:text-white hover:underline transition duration-300">Explore Colleges</Link>
         </nav>
 

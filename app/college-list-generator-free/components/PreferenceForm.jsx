@@ -377,18 +377,11 @@ export default function PreferenceForm({ onResult, setLoading, setError, isLoadi
                         {isLoading ? (
                             <> <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating... </>
                         ) : (
-                            'Predict Colleges'
+                            'Generate Preference List'
                         )}
                     </Button>
                 </div>
             </form>
-
-            {/* <div className="w-full h-full flex items-center justify-center rounded-lg overflow-hidden mt-8 md:mt-0">
-                <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-3" onClick={() => router.push('/pref-list-generator')}>
-                    Try Preference List Generator
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-            </div> */}
 
             <div className="w-full aspect-video rounded-lg overflow-hidden shadow-md mt-8 md:mt-0 self-center">
                 <iframe width="560" height="315" src="https://www.youtube.com/embed/S8e6c-7o5Gc?si=hLBytuRGI4mboYD8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
