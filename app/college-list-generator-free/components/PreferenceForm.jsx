@@ -112,7 +112,7 @@ const branchClusterMap = {
 const clusterNames = Object.keys(branchClusterMap);
 
 // External Generator API URL (moved from backend controller)
-const EXTERNAL_GENERATOR_URL = 'https://pref-list-new.onrender.com/preference-list';
+const EXTERNAL_GENERATOR_URL = 'https://pref-list-new-ztx6.onrender.com/preference-list';
 
 // --- MultiSelect Component (Keep as is) ---
 function MultiSelect({
